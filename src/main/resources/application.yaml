@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: task-management-sys
+  datasource:
+    url: jdbc:postgresql://localhost:5432/task_management_sys?schema=task_management_sys_schema
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        hbm2ddl:
+          auto: update
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  sql:
+    init:
+      mode: always
+      continue-on-error: false
+      data-locations: classpath:schema.sql
+logging:
+  level:
+    org.springframework.web: ERROR
+    org.hibernate.sql: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    site.ph0en1x.task_management_sys: DEBUG
+
+#security:
+#  jwt:
+#    secret: 0J3QtdC80L3QvtCz0L7QodC+0LvQuNCU0LvRj9CS0LDRiNC10LPQvtCn0LDRj9CY0LvQuNCa0L7RhNC1
+#    access: 1 #hours
+#    refresh: 30 #days
+#
+#springdoc:
+#  override-with-generic-response: false
