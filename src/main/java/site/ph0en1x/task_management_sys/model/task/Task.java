@@ -53,31 +53,4 @@ public class Task {
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 
-    public static TaskDto toDto(Task task, TaskDto dto) {
-        return dto.setId(
-                task.getId(),
-                task.getTitle(),
-                task.getDescription(),
-                task.getStatus(),
-                task.getPriority(),
-                task.getCreatedAt(),
-                task.getUpdatedAt(),
-                task.getAuthor().getId(),
-                task.getAssignee().getId()
-        );
-    };
-
-    @Data
-    @AllArgsConstructor
-    public class TaskDto {
-        private Long id;
-        private String title;
-        private String description;
-        private TaskStatus status;
-        private TaskPriority priority;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-        private Long authorId;
-        private Long assigneeId;
-    }
 }

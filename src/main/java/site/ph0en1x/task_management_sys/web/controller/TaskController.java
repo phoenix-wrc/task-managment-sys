@@ -3,6 +3,8 @@ package site.ph0en1x.task_management_sys.web.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import site.ph0en1x.task_management_sys.model.task.Task;
+import site.ph0en1x.task_management_sys.model.task.TaskDto;
+import site.ph0en1x.task_management_sys.model.task.TaskMapper;
 import site.ph0en1x.task_management_sys.service.TaskService;
 
 import java.util.List;
@@ -11,15 +13,20 @@ import java.util.List;
 @RestController("/tasks")
 public class TaskController {
     private final TaskService taskService;
+    private final TaskMapper taskMapper;
 
     @PostMapping
-    public Task createTask(@RequestBody Task task) {
-        return taskService.createTask(task);
+    public TaskDto createTask(@RequestBody TaskDto taskDTO) {
+        Task task = taskMapper.toEntity(taskDTO);
+        return taskMapper.toDto(
+                taskService.createTask(task));
     }
 
     @PutMapping()
-    public Task updateTask(@RequestBody Task task) {
-        return taskService.updateTask(task);
+    public TaskDto updateTask(@RequestBody TaskDto task) {
+        return taskMapper.toDto(
+                taskService.updateTask(
+                        taskMapper.toEntity(task)));
     }
 
     @DeleteMapping("/{id}")
@@ -33,17 +40,17 @@ public class TaskController {
     }
 
     @GetMapping("/byAssignee/{id}")
-    public List<Task> getTasksByAssigneeId(@PathVariable Long id) {
-        return taskService.getTasksByAssigneeId(id);
+    public List<TaskDto> getTasksByAssigneeId(@PathVariable Long id) {
+        return taskMapper.toDto(taskService.getTasksByAssigneeId(id));
     }
 
     @GetMapping("/byOwner/{id}")
-    public List<Task> getTasksByOwnerId(@PathVariable Long id) {
-        return taskService.getTasksByOwnerId(id);
+    public List<TaskDto> getTasksByOwnerId(@PathVariable Long id) {
+        return taskMapper.toDto(taskService.getTasksByOwnerId(id));
     }
 
     @GetMapping
-    public List<Task> getAllTasks() {
-        return taskService.getAllTasks();
+    public List<TaskDto> getAllTasks() {
+        return taskMapper.toDto(taskService.getAllTasks());
     }
 }
