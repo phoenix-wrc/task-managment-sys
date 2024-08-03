@@ -39,18 +39,24 @@ public class TaskController {
         return taskService.getTask(id);
     }
 
-    @GetMapping("/byAssignee/{id}")
-    public List<TaskDto> getTasksByAssigneeId(@PathVariable Long id) {
-        return taskMapper.toDto(taskService.getTasksByAssigneeId(id));
-    }
-
-    @GetMapping("/byOwner/{id}")
-    public List<TaskDto> getTasksByOwnerId(@PathVariable Long id) {
-        return taskMapper.toDto(taskService.getTasksByOwnerId(id));
-    }
-
     @GetMapping
     public List<TaskDto> getAllTasks() {
         return taskMapper.toDto(taskService.getAllTasks());
+    }
+
+//         - **Фильтрация**:
+
+    @GetMapping
+    public List<TaskDto> getTasksByAuthor(@RequestParam Long authorId) {
+        return taskMapper.toDto(
+                taskService.getTasksByOwnerId(authorId)
+        );
+    }
+
+    @GetMapping
+    public List<TaskDto> getTasksByAssigneeId(@RequestParam Long assigneeId) {
+        return taskMapper.toDto(
+                taskService.getTasksByAssigneeId(assigneeId)
+        );
     }
 }
