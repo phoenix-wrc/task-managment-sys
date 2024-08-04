@@ -12,7 +12,7 @@ import site.ph0en1x.task_management_sys.web.validation.onUpdate;
 @Data
 @NoArgsConstructor
 @Schema(description = "User DTO")
-public class UserDTO {
+public class UserDto {
 
     @Schema(description = "User ID", example = "3")
     @NotNull(message = "Id must be not null", groups = onUpdate.class)

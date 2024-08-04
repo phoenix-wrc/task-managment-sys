@@ -1,6 +1,10 @@
 package site.ph0en1x.task_management_sys.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import site.ph0en1x.task_management_sys.model.task.Task;
 import site.ph0en1x.task_management_sys.model.task.TaskDto;
@@ -10,12 +14,17 @@ import site.ph0en1x.task_management_sys.service.TaskService;
 import java.util.Collection;
 
 @RequiredArgsConstructor
-@RestController("/api/v1/tasks")
+@RestController
+@RequestMapping("/api/v1/tasks")
+@Tag(name = "Task controller", description = "Task API v1")
+@Validated
 public class TaskController {
     private final TaskService taskService;
     private final TaskMapper taskMapper;
 
     @PostMapping
+    @Operation(summary = "Create task")
+    @PreAuthorize("@customSecurityExpression.canAccessUser(#taskDTO.id)")
     public TaskDto createTask(@RequestBody TaskDto taskDTO) {
         Task task = taskMapper.toEntity(taskDTO);
         return taskMapper.toDto(
@@ -23,30 +32,40 @@ public class TaskController {
     }
 
     @PutMapping()
+    @Operation(summary = "Create task")
+    @PreAuthorize("@customSecurityExpression.canAccessUser(#task.authorId())")
     public TaskDto updateTask(@RequestBody TaskDto task) {
         return taskMapper.toDto(
                 taskService.updateTask(
                         taskMapper.toEntity(task)));
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteTaskById(@PathVariable Long id) {
+    @DeleteMapping("/{userId}/{id}")
+    @Operation(summary = "Delete task")
+    @PreAuthorize("@customSecurityExpression.canAccessUser(#userId)")
+    public void deleteTaskById(@PathVariable Long id, @PathVariable Long userId) {
         taskService.deleteTask(id);
     }
 
     @GetMapping("/{id}")
-    public Task getTask(@PathVariable Long id) {
-        return taskService.getTask(id);
+    @Operation(summary = "Get task.")
+    public TaskDto getTask(@PathVariable Long id) {
+        return taskMapper.toDto(taskService.getTask(id));
     }
 
     @GetMapping
+    @Operation(summary = "Get all tasks, admin only")
+    @PreAuthorize("@customSecurityExpression.canAccessUser(null)")
+    //Только админ может использовать, зачем то же роль админа нужна))
     public Collection<TaskDto> getAllTasks() {
         return taskMapper.toDto(taskService.getAllTasks());
     }
 
 //         - **Фильтрация**:
+    //TODO Добавить вывод с пагинацией.
 
     @GetMapping("/author")
+    @Operation(summary = "Get all tasks by author ID, request param 'authorId' ")
     public Collection<TaskDto> getTasksByAuthor(@RequestParam Long authorId) {
         return taskMapper.toDto(
                 taskService.getTasksByOwnerId(authorId)
@@ -54,6 +73,7 @@ public class TaskController {
     }
 
     @GetMapping("/assignee")
+    @Operation(summary = "Get all tasks by assignee ID, request param 'assigneeId' ")
     public Collection<TaskDto> getTasksByAssigneeId(@RequestParam Long assigneeId) {
         return taskMapper.toDto(
                 taskService.getTasksByAssigneeId(assigneeId)

@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class UserMapper {
-    public UserDTO toDto(User user) {
-        UserDTO dto = new UserDTO();
+    public UserDto toDto(User user) {
+        UserDto dto = new UserDto();
         dto.setId(user.getId());
         dto.setEmail(user.getEmail());
         dto.setFirstName(user.getFirstName());
@@ -16,7 +16,7 @@ public class UserMapper {
         return dto;
     }
 
-    public User toEntity(UserDTO dto) {
+    public User toEntity(UserDto dto) {
         User entity = new User();
         entity.setId(dto.getId());
         entity.setEmail(dto.getEmail());
@@ -27,7 +27,7 @@ public class UserMapper {
         return entity;
     }
 
-    public Collection<UserDTO> toDto(Collection<User> tasks) {
+    public Collection<UserDto> toDto(Collection<User> tasks) {
         return tasks.stream().map(this::toDto).collect(Collectors.toSet());
     }
 }

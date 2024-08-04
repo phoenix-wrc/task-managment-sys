@@ -1,15 +1,21 @@
 package site.ph0en1x.task_management_sys.web.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import site.ph0en1x.task_management_sys.model.comment.CommentDTO;
 import site.ph0en1x.task_management_sys.model.comment.CommentMapper;
 import site.ph0en1x.task_management_sys.repository.CommentRepository;
+import site.ph0en1x.task_management_sys.web.security.expression.CustomSecurityExpression;
 
 import java.util.List;
 
+@Tag(name = "Comment controller", description = "Comments API v1")
 @RequiredArgsConstructor
-@RestController("/api/v1/tasks/comments")
+@RestController
+@RequestMapping("/api/v1/comments")
+@Validated
 public class CommentController {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
@@ -18,7 +24,8 @@ public class CommentController {
     public CommentDTO createComment(@PathVariable("taskId") Long taskId,
                                     @RequestBody CommentDTO commentDTO) {
         commentDTO.setTaskId(taskId);
-        // TODO брать текущий ИД пользователя из контекста
+        commentDTO.setUserId(CustomSecurityExpression.getCurrentUserId());
+
         return commentMapper.toDto(
                 commentRepository.save(
                         commentMapper.toEntity(commentDTO))

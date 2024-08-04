@@ -53,6 +53,7 @@ public class TaskDto {
     private LocalDateTime updatedAt;
 
     @Schema(description = "Author ID", example = "3")
+    @NotNull(message = "Must be define")
     private Long authorId;
 
     @Schema(description = "Assignee user ID", example = "3")
