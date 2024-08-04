@@ -8,7 +8,6 @@ import site.ph0en1x.task_management_sys.model.comment.Comment;
 import site.ph0en1x.task_management_sys.model.user.User;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -51,6 +50,6 @@ public class Task {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> comments = new HashSet<>();
+    private Set<Comment> comments;
 
 }

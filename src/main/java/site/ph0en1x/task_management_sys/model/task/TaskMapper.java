@@ -1,13 +1,18 @@
 package site.ph0en1x.task_management_sys.model.task;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import site.ph0en1x.task_management_sys.model.comment.CommentMapper;
 import site.ph0en1x.task_management_sys.model.user.User;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Component
 public class TaskMapper {
+    private final CommentMapper commentMapper;
 
     public TaskDto toDto(Task task) {
         TaskDto dto = new TaskDto();
@@ -20,6 +25,7 @@ public class TaskMapper {
         dto.setUpdatedAt(task.getUpdatedAt());
         dto.setAuthorId(task.getAuthor().getId());
         dto.setAssigneeId(task.getAssignee().getId());
+        dto.setComments(commentMapper.toDto(task.getComments()));
         return dto;
     }
 
@@ -41,15 +47,7 @@ public class TaskMapper {
         return task;
     }
 
-    public List<TaskDto> toDto(List<Task> tasks) {
-        return tasks.stream().map(this::toDto).toList() ;
-
-//        List<TaskDto> tasksDto = new ArrayList<>();
-//
-//        for (Task task : tasks) {
-//            tasksDto.add(toDto(task));
-//        }
-//
-//        return tasksDto;
+    public Collection<TaskDto> toDto(Collection<Task> tasks) {
+        return tasks.stream().map(this::toDto).collect(Collectors.toSet());
     }
 }

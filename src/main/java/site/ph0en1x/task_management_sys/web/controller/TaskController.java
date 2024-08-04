@@ -7,10 +7,10 @@ import site.ph0en1x.task_management_sys.model.task.TaskDto;
 import site.ph0en1x.task_management_sys.model.task.TaskMapper;
 import site.ph0en1x.task_management_sys.service.TaskService;
 
-import java.util.List;
+import java.util.Collection;
 
 @RequiredArgsConstructor
-@RestController("/tasks")
+@RestController("/api/v1/tasks")
 public class TaskController {
     private final TaskService taskService;
     private final TaskMapper taskMapper;
@@ -40,21 +40,21 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<TaskDto> getAllTasks() {
+    public Collection<TaskDto> getAllTasks() {
         return taskMapper.toDto(taskService.getAllTasks());
     }
 
 //         - **Фильтрация**:
 
-    @GetMapping
-    public List<TaskDto> getTasksByAuthor(@RequestParam Long authorId) {
+    @GetMapping("/author")
+    public Collection<TaskDto> getTasksByAuthor(@RequestParam Long authorId) {
         return taskMapper.toDto(
                 taskService.getTasksByOwnerId(authorId)
         );
     }
 
-    @GetMapping
-    public List<TaskDto> getTasksByAssigneeId(@RequestParam Long assigneeId) {
+    @GetMapping("/assignee")
+    public Collection<TaskDto> getTasksByAssigneeId(@RequestParam Long assigneeId) {
         return taskMapper.toDto(
                 taskService.getTasksByAssigneeId(assigneeId)
         );

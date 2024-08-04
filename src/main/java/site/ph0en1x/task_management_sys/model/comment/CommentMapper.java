@@ -4,7 +4,9 @@ import org.springframework.stereotype.Component;
 import site.ph0en1x.task_management_sys.model.task.Task;
 import site.ph0en1x.task_management_sys.model.user.User;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class CommentMapper {
@@ -35,8 +37,8 @@ public class CommentMapper {
         return entity;
     }
 
-    public List<CommentDTO> toDto(List<Comment> tasks) {
-        return tasks.stream().map(this::toDto).toList();
+    public Set<CommentDTO> toDto(Collection<Comment> tasks) {
+        return tasks.stream().map(this::toDto).collect(Collectors.toSet());
 
     }
 }

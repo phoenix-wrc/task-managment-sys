@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import site.ph0en1x.task_management_sys.model.comment.Comment;
 import site.ph0en1x.task_management_sys.model.task.Task;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -39,7 +38,7 @@ public class User {
     @ElementCollection
     @CollectionTable(name = "users_roles_enum")
     @Enumerated(EnumType.STRING)
-    private Set<Roles> role;
+    private Set<Roles> roles;
 
 //    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 //    @JoinTable(name = "user_role_mapping",
@@ -48,12 +47,12 @@ public class User {
 //    private Set<Role> rolesSet = new HashSet<>();
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Task> authoredTasks = new HashSet<>();
+    private Set<Task> authoredTasks;
 
     @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Task> assignedTasks = new HashSet<>();
+    private Set<Task> assignedTasks;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> comments = new HashSet<>();
+    private Set<Comment> comments;
 
 }

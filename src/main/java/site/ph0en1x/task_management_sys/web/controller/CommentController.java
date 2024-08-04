@@ -9,12 +9,12 @@ import site.ph0en1x.task_management_sys.repository.CommentRepository;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RestController("/task/{taskId}/comments")
+@RestController("/api/v1/tasks/comments")
 public class CommentController {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
 
-    @PostMapping
+    @PostMapping("/{taskId}")
     public CommentDTO createComment(@PathVariable("taskId") Long taskId,
                                     @RequestBody CommentDTO commentDTO) {
         commentDTO.setTaskId(taskId);
@@ -25,7 +25,7 @@ public class CommentController {
         );
     }
 
-    @GetMapping
+    @GetMapping("/{taskId}")
     public List<CommentDTO> getAllComments(@PathVariable Long taskId) {
         return commentRepository.findAllByTask_Id(taskId).stream()
                 .map(commentMapper::toDto)

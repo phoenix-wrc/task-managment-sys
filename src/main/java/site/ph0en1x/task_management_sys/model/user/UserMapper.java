@@ -2,7 +2,8 @@ package site.ph0en1x.task_management_sys.model.user;
 
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Component
 public class UserMapper {
@@ -26,7 +27,7 @@ public class UserMapper {
         return entity;
     }
 
-    public List<UserDTO> toDto(List<User> tasks) {
-        return tasks.stream().map(this::toDto).toList();
+    public Collection<UserDTO> toDto(Collection<User> tasks) {
+        return tasks.stream().map(this::toDto).collect(Collectors.toSet());
     }
 }
