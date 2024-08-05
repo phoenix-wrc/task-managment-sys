@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import site.ph0en1x.task_management_sys.model.comment.CommentDTO;
 import site.ph0en1x.task_management_sys.web.validation.onCreate;
@@ -14,8 +16,8 @@ import site.ph0en1x.task_management_sys.web.validation.onUpdate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+@Slf4j
 @Data
-@NoArgsConstructor
 @Schema(description = "Task DTO")
 public class TaskDto {
 
@@ -61,4 +63,8 @@ public class TaskDto {
 
     @Schema(description = "All comments to task")
     private Set<CommentDTO> comments;
+
+    public TaskDto() {
+        log.debug("TaskDto Constructor");
+    }
 }

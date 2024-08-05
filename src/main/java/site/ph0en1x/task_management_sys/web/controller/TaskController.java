@@ -3,6 +3,7 @@ package site.ph0en1x.task_management_sys.web.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,8 @@ import site.ph0en1x.task_management_sys.model.task.Task;
 import site.ph0en1x.task_management_sys.model.task.TaskDto;
 import site.ph0en1x.task_management_sys.model.task.TaskMapper;
 import site.ph0en1x.task_management_sys.service.TaskService;
+import site.ph0en1x.task_management_sys.web.security.expression.CustomSecurityExpression;
+import site.ph0en1x.task_management_sys.web.validation.onCreate;
 
 import java.util.Collection;
 
@@ -18,21 +21,23 @@ import java.util.Collection;
 @RequestMapping("/api/v1/tasks")
 @Tag(name = "Task controller", description = "Task API v1")
 @Validated
+@Slf4j
 public class TaskController {
     private final TaskService taskService;
     private final TaskMapper taskMapper;
 
     @PostMapping
     @Operation(summary = "Create task")
-    @PreAuthorize("@customSecurityExpression.canAccessUser(#taskDTO.id)")
-    public TaskDto createTask(@RequestBody TaskDto taskDTO) {
+    public TaskDto createTask(@Validated(onCreate.class) @RequestBody TaskDto taskDTO) {
+        taskDTO.setAuthorId(CustomSecurityExpression.getCurrentUserId());
         Task task = taskMapper.toEntity(taskDTO);
+        log.debug("Create task {}", task.toString());
         return taskMapper.toDto(
                 taskService.createTask(task));
     }
 
     @PutMapping()
-    @Operation(summary = "Create task")
+    @Operation(summary = "Update task")
     @PreAuthorize("@customSecurityExpression.canAccessUser(#task.authorId())")
     public TaskDto updateTask(@RequestBody TaskDto task) {
         return taskMapper.toDto(

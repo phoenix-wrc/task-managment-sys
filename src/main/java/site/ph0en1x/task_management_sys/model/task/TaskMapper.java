@@ -3,10 +3,12 @@ package site.ph0en1x.task_management_sys.model.task;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import site.ph0en1x.task_management_sys.model.comment.CommentMapper;
+import site.ph0en1x.task_management_sys.model.exception.ResourceMappingException;
 import site.ph0en1x.task_management_sys.model.user.User;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -30,20 +32,30 @@ public class TaskMapper {
     }
 
     public Task toEntity(TaskDto dto) {
+        if (dto == null) throw new ResourceMappingException("DTO is null");
         Task task = new Task();
         task.setId(dto.getId());
         task.setTitle(dto.getTitle());
         task.setDescription(dto.getDescription());
         task.setStatus(dto.getStatus());
         task.setPriority(dto.getPriority());
-        task.setUpdatedAt(dto.getUpdatedAt());
-        User author = new User(); // TODO заменить на взятие ИД из контекста, за других создавать таски нельзя
+        task.setUpdatedAt(LocalDateTime.now());
+        User author = new User();
         author.setId(dto.getAuthorId());
         task.setAuthor(author);
-        User assignee = new User();
-        assignee.setId(dto.getAssigneeId());
-        task.setAssignee(assignee);
-        task.setUpdatedAt(LocalDateTime.now());
+        if (dto.getAssigneeId() != null) {
+            User assignee = new User();
+            assignee.setId(dto.getAssigneeId());
+            task.setAssignee(assignee);
+        } else {
+            task.setAssignee(author);
+        }
+        if (dto.getComments() == null) {
+            task.setComments(new HashSet<>());
+        } else {
+            task.setComments(dto.getComments().stream()
+                    .map(commentMapper::toEntity).collect(Collectors.toSet()));
+        }
         return task;
     }
 

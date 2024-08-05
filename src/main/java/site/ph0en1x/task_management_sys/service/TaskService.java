@@ -6,6 +6,7 @@ import site.ph0en1x.task_management_sys.model.exception.ResourceNotFoundExceptio
 import site.ph0en1x.task_management_sys.model.task.Task;
 import site.ph0en1x.task_management_sys.repository.TaskRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -15,6 +16,7 @@ public class TaskService {
     private final TaskRepository taskRepository;
 
     public Task createTask(Task task) {
+        task.setCreatedAt(LocalDateTime.now());
         return taskRepository.save(task);
     }
 
