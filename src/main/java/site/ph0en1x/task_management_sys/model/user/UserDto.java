@@ -37,15 +37,13 @@ public class UserDto {
 
     @Schema(description = "Name of user", example = "Ronald")
     @NotNull(message = "Name must be not null", groups = {onCreate.class, onUpdate.class})
-    @Length(max = 255, message = "Name must be less than 255 symbols", groups = {onCreate.class, onUpdate.class} )
+    @Length(max = 255, min = 1, message = "Name must be less than 255 symbols",
+            groups = {onCreate.class, onUpdate.class} )
     private String firstName;
 
     @Schema(description = "User's Last name", example = "Weasley")
     @NotNull(message = "Last name must be not null", groups = {onCreate.class, onUpdate.class})
-    @Length(max = 255, message = "Last name must be less than 255 symbols", groups = {onCreate.class, onUpdate.class})
+    @Length(max = 255, min = 1, message = "Last name must be less than 255 symbols",
+            groups = {onCreate.class, onUpdate.class})
     private String lastName;
-
-
-    @Schema(description = "User's roles", example = "AUTHOR, ADMIN, USER")
-    private Set<Roles> roles;
 }

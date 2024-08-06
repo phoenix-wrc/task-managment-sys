@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -62,19 +63,11 @@ public class TaskController {
         return taskMapper.toDto(task);
     }
 
-    @GetMapping
-    @Operation(summary = "Get all tasks, admin only")
-    @PreAuthorize("@customSecurityExpression.canAccessUser(null)")
-    //Только админ может использовать, зачем то же роль админа нужна))
-    public Collection<TaskDto> getAllTasks() {
-        return taskMapper.toDto(taskService.getAllTasks());
-    }
-
 //         - **Фильтрация**:
     //TODO Добавить вывод с пагинацией.
 
     @GetMapping("/author")
-    @Operation(summary = "Get all tasks by author ID, request param 'authorId' ")
+    @Operation(summary = "Get all tasks by author ID, required param 'authorId' ")
     public Collection<TaskDto> getTasksByAuthor(@RequestParam Long authorId) {
         return taskMapper.toDto(
                 taskService.getTasksByOwnerId(authorId)
@@ -82,10 +75,39 @@ public class TaskController {
     }
 
     @GetMapping("/assignee")
-    @Operation(summary = "Get all tasks by assignee ID, request param 'assigneeId' ")
+    @Operation(summary = "Get all tasks by assignee ID, required param 'assigneeId' ")
     public Collection<TaskDto> getTasksByAssigneeId(@RequestParam Long assigneeId) {
         return taskMapper.toDto(
                 taskService.getTasksByAssigneeId(assigneeId)
+        );
+    }
+
+    @GetMapping
+    @Operation(summary = "Get all tasks with filters, required params: \n " +
+            " searchTerm - string with search line to search in title and description,\n" +
+            " status - string with status, \n" +
+            " priority - string with priority,\n" +
+            " author - ID of author,\n" +
+            " assignee - ID of assignee user." +
+            "pageSize - count of task on page default is 2, " +
+            "pageNumber - number of page, default is 0")
+    public Page<Task> getTasksWithFilter(
+            @RequestParam(required = false) String searchTerm,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String priority,
+            @RequestParam(required = false) Long author,
+            @RequestParam(required = false) Long assignee,
+            @RequestParam(defaultValue = "2") int pageSize,
+            @RequestParam(defaultValue = "0") int pageNumber
+    ) {
+        return taskService.getTasks(
+                searchTerm,
+                status,
+                priority,
+                author,
+                assignee,
+                pageSize,
+                pageNumber
         );
     }
 }
