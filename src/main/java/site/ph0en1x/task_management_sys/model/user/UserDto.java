@@ -9,6 +9,8 @@ import org.hibernate.validator.constraints.Length;
 import site.ph0en1x.task_management_sys.web.validation.onCreate;
 import site.ph0en1x.task_management_sys.web.validation.onUpdate;
 
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @Schema(description = "User DTO")
@@ -42,4 +44,8 @@ public class UserDto {
     @NotNull(message = "Last name must be not null", groups = {onCreate.class, onUpdate.class})
     @Length(max = 255, message = "Last name must be less than 255 symbols", groups = {onCreate.class, onUpdate.class})
     private String lastName;
+
+
+    @Schema(description = "User's roles", example = "AUTHOR, ADMIN, USER")
+    private Set<Roles> roles;
 }

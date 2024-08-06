@@ -1,6 +1,7 @@
 package site.ph0en1x.task_management_sys.web.security.expression;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,6 +12,7 @@ import site.ph0en1x.task_management_sys.web.security.JwtEntity;
 
 @Service("customSecurityExpression")
 @RequiredArgsConstructor
+@Slf4j
 public class CustomSecurityExpression {
 
     private final UserService userService;
@@ -31,6 +33,8 @@ public class CustomSecurityExpression {
     }
 
     private boolean hasAnyRole(Authentication authentication, Roles ... roles) {
+        log.debug("hasAnyRole for user {}, with authorities {}",
+                authentication.getPrincipal(), authentication.getAuthorities().toString() );
         for(Roles role: roles) {
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
             if (authentication.getAuthorities().contains(authority)) {

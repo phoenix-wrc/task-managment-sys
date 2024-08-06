@@ -50,12 +50,7 @@ public class TaskMapper {
         } else {
             task.setAssignee(author);
         }
-        if (dto.getComments() == null) {
-            task.setComments(new HashSet<>());
-        } else {
-            task.setComments(dto.getComments().stream()
-                    .map(commentMapper::toEntity).collect(Collectors.toSet()));
-        }
+        task.setComments(new HashSet<>());
         return task;
     }
 

@@ -5,13 +5,14 @@ import lombok.Data;
 import site.ph0en1x.task_management_sys.model.task.Task;
 import site.ph0en1x.task_management_sys.model.user.User;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 
 @Data
 @Entity
 @Table(name = "comments")
-public class Comment {
+public class Comment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

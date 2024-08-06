@@ -7,8 +7,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 import site.ph0en1x.task_management_sys.model.auth.JwtRequest;
 import site.ph0en1x.task_management_sys.model.auth.JwtResponse;
+import site.ph0en1x.task_management_sys.model.user.Roles;
 import site.ph0en1x.task_management_sys.model.user.User;
 import site.ph0en1x.task_management_sys.web.security.JwtTokenProvider;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +43,8 @@ public class AuthService {
 
         jwtResponse.setId(user.getId());
         jwtResponse.setUsername(user.getEmail());
-        jwtResponse.setAccessToken(tokenProvider.createAccessToken(user.getId(), user.getEmail(), user.getRoles()));
+        jwtResponse.setAccessToken(tokenProvider.createAccessToken(user.getId(), user.getEmail(),
+                new HashSet<>(user.getRoles())));
         jwtResponse.setRefreshToken(tokenProvider.createRefreshToken(user.getId(), user.getEmail()));
         return jwtResponse;
     }

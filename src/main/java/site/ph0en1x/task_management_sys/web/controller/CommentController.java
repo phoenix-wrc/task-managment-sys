@@ -1,6 +1,8 @@
 package site.ph0en1x.task_management_sys.web.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.executable.ValidateOnExecution;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +10,7 @@ import site.ph0en1x.task_management_sys.model.comment.CommentDTO;
 import site.ph0en1x.task_management_sys.model.comment.CommentMapper;
 import site.ph0en1x.task_management_sys.repository.CommentRepository;
 import site.ph0en1x.task_management_sys.web.security.expression.CustomSecurityExpression;
+import site.ph0en1x.task_management_sys.web.validation.onCreate;
 
 import java.util.List;
 
@@ -22,7 +25,7 @@ public class CommentController {
 
     @PostMapping("/{taskId}")
     public CommentDTO createComment(@PathVariable("taskId") Long taskId,
-                                    @RequestBody CommentDTO commentDTO) {
+                                    @Validated(onCreate.class) @RequestBody CommentDTO commentDTO) {
         commentDTO.setTaskId(taskId);
         commentDTO.setUserId(CustomSecurityExpression.getCurrentUserId());
 

@@ -23,6 +23,7 @@ import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -72,7 +73,8 @@ public class JwtTokenProvider {
         User user = userService.getById(userId);
         jwtResponse.setId(userId);
         jwtResponse.setUsername(user.getEmail());
-        jwtResponse.setAccessToken(createAccessToken(userId, user.getEmail(), user.getRoles()));
+        jwtResponse.setAccessToken(createAccessToken(userId, user.getEmail(),
+                new  HashSet<>(user.getRoles())));
         jwtResponse.setRefreshToken(createRefreshToken(userId, user.getEmail()));
         return jwtResponse;
     }

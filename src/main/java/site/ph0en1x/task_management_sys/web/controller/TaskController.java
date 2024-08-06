@@ -40,6 +40,7 @@ public class TaskController {
     @Operation(summary = "Update task")
     @PreAuthorize("@customSecurityExpression.canAccessUser(#task.authorId())")
     public TaskDto updateTask(@RequestBody TaskDto task) {
+        log.debug("Update task {}", task.toString());
         return taskMapper.toDto(
                 taskService.updateTask(
                         taskMapper.toEntity(task)));
@@ -53,9 +54,12 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get task.")
+    @Operation(summary = "Get task by it ID.")
     public TaskDto getTask(@PathVariable Long id) {
-        return taskMapper.toDto(taskService.getTask(id));
+        log.debug("Get task with id {}", id);
+        Task task = taskService.getTask(id);
+        log.debug("Got task {}", task.toString());
+        return taskMapper.toDto(task);
     }
 
     @GetMapping
