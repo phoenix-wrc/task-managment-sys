@@ -1,18 +1,15 @@
 package site.ph0en1x.task_management_sys.web.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import jakarta.validation.executable.ValidateOnExecution;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import site.ph0en1x.task_management_sys.model.comment.CommentDTO;
 import site.ph0en1x.task_management_sys.model.comment.CommentMapper;
-import site.ph0en1x.task_management_sys.repository.CommentRepository;
+import site.ph0en1x.task_management_sys.service.CommentService;
 import site.ph0en1x.task_management_sys.web.security.expression.CustomSecurityExpression;
 import site.ph0en1x.task_management_sys.web.validation.onCreate;
-
-import java.util.List;
 
 @Tag(name = "Comment controller", description = "Comments API v1")
 @RequiredArgsConstructor
@@ -20,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/v1/comments")
 @Validated
 public class CommentController {
-    private final CommentRepository commentRepository;
+    private final CommentService commentService;
     private final CommentMapper commentMapper;
 
     @PostMapping("/{taskId}")
@@ -30,15 +27,25 @@ public class CommentController {
         commentDTO.setUserId(CustomSecurityExpression.getCurrentUserId());
 
         return commentMapper.toDto(
-                commentRepository.save(
+                commentService.createComment(
                         commentMapper.toEntity(commentDTO))
         );
     }
 
     @GetMapping("/{taskId}")
-    public List<CommentDTO> getAllComments(@PathVariable Long taskId) {
-        return commentRepository.findAllByTask_Id(taskId).stream()
-                .map(commentMapper::toDto)
-                .toList();
+    public Page<CommentDTO> getComments(
+            @PathVariable Long taskId,
+            @RequestParam(required = false) String searchTerm,
+            @RequestParam(required = false) Long author,
+            @RequestParam(defaultValue = "2") int pageSize,
+            @RequestParam(defaultValue = "0") int pageNumber
+    ) {
+        return commentService.getComments(
+                taskId,
+                searchTerm,
+                author,
+                pageSize,
+                pageNumber
+        ).map(commentMapper::toDto);
     }
 }

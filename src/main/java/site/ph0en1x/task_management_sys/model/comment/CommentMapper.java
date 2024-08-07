@@ -35,8 +35,8 @@ public class CommentMapper {
         return entity;
     }
 
-    public Set<CommentDTO> toDto(Collection<Comment> tasks) {
-        return tasks.stream().map(this::toDto).collect(Collectors.toSet());
+    public Set<CommentDTO> toDto(Set<Comment> comments) {
+        return comments.stream().map(this::toDto).collect(Collectors.toSet());
 
     }
 }
