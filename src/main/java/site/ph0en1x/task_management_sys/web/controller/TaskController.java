@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import site.ph0en1x.task_management_sys.model.task.Task;
 import site.ph0en1x.task_management_sys.model.task.TaskDto;
 import site.ph0en1x.task_management_sys.model.task.TaskMapper;
+import site.ph0en1x.task_management_sys.model.task.TaskStatus;
 import site.ph0en1x.task_management_sys.service.TaskService;
 import site.ph0en1x.task_management_sys.web.validation.onCreate;
 
@@ -43,20 +44,11 @@ public class TaskController {
                         taskMapper.toEntity(task)));
     }
 
-    @PutMapping()
+    @PutMapping("/{id}")
     @Operation(summary = "Update status of task")
-    @PreAuthorize("@customSecurityExpression.canAccessSetStatus(#taskDto.id())")
-    public TaskDto updateTaskStatus(@RequestBody TaskDto taskDto) {
-        log.debug("Update status task {}", taskDto.toString());
-        Task task = taskMapper.toEntity(taskDto);
-
-        task.setTitle(null);
-        task.setDescription(null);
-        task.setPriority(null);
-        task.setAssignee(null);
-        task.setAuthor(null);
-
-        return taskMapper.toDto(taskService.updateTask(task));
+    @PreAuthorize("@customSecurityExpression.canAccessSetStatus(#id)")
+    public TaskDto updateTaskStatus(@RequestBody TaskStatus taskStatus, @PathVariable Long id) {
+        return taskMapper.toDto(taskService.updateTaskStatus(taskStatus, id));
     }
 
 

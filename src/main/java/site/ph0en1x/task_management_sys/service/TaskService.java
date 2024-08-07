@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.ph0en1x.task_management_sys.model.exception.ResourceNotFoundException;
 import site.ph0en1x.task_management_sys.model.task.Task;
+import site.ph0en1x.task_management_sys.model.task.TaskStatus;
 import site.ph0en1x.task_management_sys.repository.TaskRepository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -51,16 +51,14 @@ public class TaskService {
                 new ResourceNotFoundException("Задача с таким ID не найдена в базе данных"));
     }
 
-    @Transactional(readOnly = true)
-    public List<Task> getTasksByAssigneeId(Long assigneeId) {
-        return taskRepository.findAllByAssigneeId(assigneeId);
+    @Transactional
+    public Task updateTaskStatus(TaskStatus taskStatus, Long id) {
+        Task save = getTask(id);
+                save.setStatus(taskStatus);
+        return taskRepository.save(save);
     }
 
     @Transactional(readOnly = true)
-    public List<Task> getTasksByOwnerId(Long ownerId) {
-        return taskRepository.findAllByAuthorId(ownerId);
-    }
-
     public Page<Task> getTasks(
             String searchTerm,
             String status,
@@ -80,5 +78,4 @@ public class TaskService {
                 pageable
         );
     }
-
 }

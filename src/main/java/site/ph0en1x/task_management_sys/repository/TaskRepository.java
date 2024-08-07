@@ -7,14 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import site.ph0en1x.task_management_sys.model.task.Task;
 
-import java.util.List;
-
 public interface TaskRepository extends JpaRepository<Task, Long> {
-    List<Task> findAllByAssigneeId(Long assigneeId);
-
-    List<Task> findAllByAuthorId(Long ownerId);
-
-    boolean existsByIdAndAuthorId(Long id, Long authorId);
 
     @Query("SELECT t FROM Task t WHERE " +
             "(lower(t.title) LIKE %:searchTerm% OR " +
