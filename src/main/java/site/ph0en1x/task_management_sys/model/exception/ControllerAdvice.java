@@ -33,7 +33,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(site.ph0en1x.task_management_sys.model.exception.ResourceMappingException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handlerResourceMappingException(ResourceMappingException ex) {
         return new ExceptionBody(ex.getMessage());
     }
@@ -92,7 +92,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handlerDataIntegrityViolationException(Exception exception) {
         log.debug("{} {}", exception.getMessage(), exception.getClass().getName());
         if (exception.getMessage().contains(
@@ -103,7 +103,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handlerIllegalArgumentException(IllegalArgumentException exception) {
         log.debug("{} {}", exception.getMessage(), exception.getClass().getName());
         if (exception.getMessage().contains(
@@ -120,17 +120,17 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handlerException(MethodArgumentTypeMismatchException exception) {
         log.debug("Into parameter inserted string, when need Number");
         return new ExceptionBody("Invalid parameter inserted. Please insert another type of parameter");
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionBody handlerException(Exception exception) {
-        log.debug("{} with message {} and with stacktrace \n {}",
-                exception.getClass().getName(), exception.getMessage(), Arrays.toString(exception.getStackTrace()));
-        return new ExceptionBody("Internal error. Please try again later.");
-    }
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public ExceptionBody handlerException(Exception exception) {
+//        log.debug("{} with message {} and with stacktrace \n {}",
+//                exception.getClass().getName(), exception.getMessage(), Arrays.toString(exception.getStackTrace()));
+//        return new ExceptionBody("Internal error. Please try again later.");
+//    }
 }
