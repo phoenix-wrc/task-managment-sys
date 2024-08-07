@@ -78,15 +78,17 @@ public class TaskController {
 
     @GetMapping
     @Operation(summary = """
-            Get all tasks with filters, required params:\s
-             \
+            Get all tasks with filters.
+            Not required params:
             searchTerm - string with search line to search in title and description,
-            status - string with status,\s
+            status - string with status,
             priority - string with priority,
             author - ID of author,
-            assignee - ID of assignee user.\
-            pageSize - count of task on page default is 2, \
-            pageNumber - number of page, default is 0""")
+            assignee - ID of assignee user.
+     \
+            Required params:
+            pageSize - count of task on page default is 2,
+            pageNumber - number of page, default is 0.""")
     public Page<TaskDto> getTasksWithFilter(
             @RequestParam(required = false) String searchTerm,
             @RequestParam(required = false) String status,

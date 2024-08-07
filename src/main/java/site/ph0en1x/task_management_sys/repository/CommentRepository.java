@@ -7,10 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import site.ph0en1x.task_management_sys.model.comment.Comment;
 
-import java.util.List;
-
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findAllByTask_Id(Long id);
 
     @Query("SELECT c FROM Comment c WHERE " +
             "(lower(c.text) LIKE %:searchTerm%) " +

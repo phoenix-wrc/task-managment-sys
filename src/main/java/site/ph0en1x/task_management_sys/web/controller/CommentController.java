@@ -1,5 +1,6 @@
 package site.ph0en1x.task_management_sys.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ public class CommentController {
     private final CommentMapper commentMapper;
 
     @PostMapping("/{taskId}")
+    @Operation(summary = "Create an comment to task.")
     public CommentDTO createComment(@PathVariable("taskId") Long taskId,
                                     @Validated(onCreate.class) @RequestBody CommentDTO commentDTO) {
         commentDTO.setTaskId(taskId);
@@ -33,6 +35,14 @@ public class CommentController {
     }
 
     @GetMapping("/{taskId}")
+    @Operation(summary = """
+            Get all task's comments with filters.
+            Not required params:
+            searchTerm - string with search line to search in text,
+            author - ID of author.
+            Required params:
+            pageSize - count of task on page default is 2,
+            pageNumber - number of page, default is 0.""")
     public Page<CommentDTO> getComments(
             @PathVariable Long taskId,
             @RequestParam(required = false) String searchTerm,
