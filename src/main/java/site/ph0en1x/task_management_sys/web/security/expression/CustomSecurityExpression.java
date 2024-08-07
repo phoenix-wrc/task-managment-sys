@@ -32,6 +32,10 @@ public class CustomSecurityExpression {
         return userService.isTaskExecutor(getCurrentUserId(), taskId);
     }
 
+    public boolean canAccessToTask(Long taskId) {
+        return userService.isTaskAuthor(getCurrentUserId(), taskId);
+    }
+
     private boolean hasAnyRole(Authentication authentication, Roles ... roles) {
         log.debug("hasAnyRole for user {}, with authorities {}",
                 authentication.getPrincipal(), authentication.getAuthorities().toString() );
@@ -43,4 +47,5 @@ public class CustomSecurityExpression {
         }
         return false;
     }
+
 }

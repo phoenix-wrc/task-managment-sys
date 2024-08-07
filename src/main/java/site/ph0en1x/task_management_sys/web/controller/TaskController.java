@@ -30,7 +30,6 @@ public class TaskController {
     @PostMapping
     @Operation(summary = "Create task")
     public TaskDto createTask(@Validated(onCreate.class) @RequestBody TaskDto taskDTO) {
-        taskDTO.setAuthorId(CustomSecurityExpression.getCurrentUserId());
         Task task = taskMapper.toEntity(taskDTO);
         log.debug("Create task {}", task.toString());
         return taskMapper.toDto(
@@ -39,7 +38,7 @@ public class TaskController {
 
     @PutMapping()
     @Operation(summary = "Update task")
-    @PreAuthorize("@customSecurityExpression.canAccessUser(#task.authorId())")
+    @PreAuthorize("@customSecurityExpression.canAccessToTask(#task.authorId())")
     public TaskDto updateTask(@RequestBody TaskDto task) {
         log.debug("Update task {}", task.toString());
         return taskMapper.toDto(
@@ -47,10 +46,27 @@ public class TaskController {
                         taskMapper.toEntity(task)));
     }
 
-    @DeleteMapping("/{userId}/{id}")
-    @Operation(summary = "Delete task")
-    @PreAuthorize("@customSecurityExpression.canAccessUser(#userId)")
-    public void deleteTaskById(@PathVariable Long id, @PathVariable Long userId) {
+    @PutMapping()
+    @Operation(summary = "Update status of task")
+    @PreAuthorize("@customSecurityExpression.canAccessSetStatus(#taskDto.id())")
+    public TaskDto updateTaskStatus(@RequestBody TaskDto taskDto) {
+        log.debug("Update status task {}", taskDto.toString());
+        Task task = taskMapper.toEntity(taskDto);
+
+        task.setTitle(null);
+        task.setDescription(null);
+        task.setPriority(null);
+        task.setAssignee(null);
+        task.setAuthor(null);
+
+        return taskMapper.toDto(taskService.updateTask(task));
+    }
+
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete task with id")
+    @PreAuthorize("@customSecurityExpression.canAccessToTask(#id)")
+    public void deleteTaskById(@PathVariable Long id) {
         taskService.deleteTask(id);
     }
 
@@ -62,9 +78,6 @@ public class TaskController {
         log.debug("Got task {}", task.toString());
         return taskMapper.toDto(task);
     }
-
-//         - **Фильтрация**:
-    //TODO Добавить вывод с пагинацией.
 
     @GetMapping("/author")
     @Operation(summary = "Get all tasks by author ID, required param 'authorId' ")
@@ -91,7 +104,7 @@ public class TaskController {
             " assignee - ID of assignee user." +
             "pageSize - count of task on page default is 2, " +
             "pageNumber - number of page, default is 0")
-    public Page<Task> getTasksWithFilter(
+    public Page<TaskDto> getTasksWithFilter(
             @RequestParam(required = false) String searchTerm,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String priority,
@@ -108,6 +121,6 @@ public class TaskController {
                 assignee,
                 pageSize,
                 pageNumber
-        );
+        ).map(taskMapper::toDto);
     }
 }

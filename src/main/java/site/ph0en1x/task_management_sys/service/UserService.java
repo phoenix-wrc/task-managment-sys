@@ -35,6 +35,11 @@ public class UserService {
         return userRepository.existsUserByIdAndAssignedTasksId(userId, taskId);
     }
 
+    @Transactional(readOnly = true)
+    public boolean isTaskAuthor(Long currentUserId, Long taskId) {
+        return userRepository.existsUserByIdAndAuthoredTasksId(currentUserId, taskId);
+    }
+
     @Transactional
     public User create(User user) {
         if (userRepository.existsUserByEmail(user.getEmail())) {

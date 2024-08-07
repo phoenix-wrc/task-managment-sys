@@ -39,7 +39,7 @@ public class TaskService {
     @Transactional
     public void deleteTask(Long id) {
         if (!taskRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Task with that ID not found");
+            throw new ResourceNotFoundException("Task with that ID not found or not authorized");
         }
         taskRepository.deleteById(id);
     }
@@ -59,11 +59,6 @@ public class TaskService {
     @Transactional(readOnly = true)
     public List<Task> getTasksByOwnerId(Long ownerId) {
         return taskRepository.findAllByAuthorId(ownerId);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
     }
 
     public Page<Task> getTasks(

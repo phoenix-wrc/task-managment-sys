@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import site.ph0en1x.task_management_sys.model.comment.CommentMapper;
 import site.ph0en1x.task_management_sys.model.exception.ResourceMappingException;
 import site.ph0en1x.task_management_sys.model.user.User;
+import site.ph0en1x.task_management_sys.web.security.expression.CustomSecurityExpression;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -41,7 +42,7 @@ public class TaskMapper {
         task.setPriority(dto.getPriority());
         task.setUpdatedAt(LocalDateTime.now());
         User author = new User();
-        author.setId(dto.getAuthorId());
+        author.setId(CustomSecurityExpression.getCurrentUserId());
         task.setAuthor(author);
         if (dto.getAssigneeId() != null) {
             User assignee = new User();

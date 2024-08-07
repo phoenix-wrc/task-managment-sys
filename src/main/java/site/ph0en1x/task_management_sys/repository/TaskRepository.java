@@ -14,6 +14,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findAllByAuthorId(Long ownerId);
 
+    boolean existsByIdAndAuthorId(Long id, Long authorId);
+
     @Query("SELECT t FROM Task t WHERE " +
             "(lower(t.title) LIKE %:searchTerm% OR " +
             "lower(t.description) LIKE %:searchTerm%) " +
