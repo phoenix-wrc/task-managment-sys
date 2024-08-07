@@ -45,7 +45,7 @@ public class ControllerAdvice {
     @ExceptionHandler({AccessDeniedException.class, AccessDeniedException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionBody handlerAccessDeniedException(AccessDeniedException ex) {
-        log.debug(ex.getMessage());
+        log.debug("handlerAccessDeniedException {}", ex.getMessage());
         return new ExceptionBody("Access denied");
     }
 
@@ -59,8 +59,6 @@ public class ControllerAdvice {
             errorMap.put(error.getField(), error.getDefaultMessage());
         }
         body.setErrors(errorMap);
-//        body.setErrors(errorList.stream()
-//                .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)));
 
         return body;
     }
@@ -69,7 +67,6 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handlerConstraintViolationException(ConstraintViolationException ex) {
         var body = new ExceptionBody("Validation failed");
-//        List<FieldError> errorList = ex.getBindingResult().getFieldErrors();
         body.setErrors(ex.getConstraintViolations().stream()
                 .collect(Collectors.toMap(
                         constraintViolation -> constraintViolation.getPropertyPath().toString(),
@@ -81,14 +78,14 @@ public class ControllerAdvice {
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handlerAuthenticationException(AuthenticationException ex) {
-        log.debug(ex.getMessage());
-        return new ExceptionBody("Authentication failed.");
+        log.debug("handlerAuthenticationException {}", ex.getMessage());
+        return new ExceptionBody("Authentication failed. " + ex.getMessage());
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBody handlerAuthenticationException(ExpiredJwtException ex) {
-        log.debug(ex.getMessage());
+    public ExceptionBody handlerExpiredJwtException(ExpiredJwtException ex) {
+        log.debug("handlerExpiredJwtException {}", ex.getMessage());
         return new ExceptionBody("User's token has expired. Please refresh token");
     }
 

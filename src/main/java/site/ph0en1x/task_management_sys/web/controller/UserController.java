@@ -28,7 +28,7 @@ public class UserController {
     @Operation(summary = "Update user")
     @PreAuthorize("@customSecurityExpression.canAccessUser(#dto.id)")
     public UserDto update(@Validated(onUpdate.class) @RequestBody UserDto dto) {
-        User updated = service.create(mapper.toEntity(dto));
+        User updated = service.update(mapper.toEntity(dto));
         return mapper.toDto(updated);
     }
 

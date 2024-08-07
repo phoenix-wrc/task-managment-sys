@@ -20,8 +20,10 @@ public class CommentService {
             int pageSize,
             int pageNumber) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        if(searchTerm != null && !searchTerm.isEmpty())
+            searchTerm = searchTerm.toLowerCase();
         return commentRepository.findAll(
-                searchTerm.toLowerCase(),
+                searchTerm,
                 taskId,
                 author,
                 pageable

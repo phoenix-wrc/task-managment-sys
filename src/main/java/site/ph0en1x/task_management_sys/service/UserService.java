@@ -20,7 +20,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User getByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() ->
-                new ResourceNotFoundException("User with " + email + "not found"));
+                new ResourceNotFoundException("User with " + email + " not found"));
     }
 
     @Transactional(readOnly = true)
