@@ -12,10 +12,7 @@ import site.ph0en1x.task_management_sys.model.task.Task;
 import site.ph0en1x.task_management_sys.model.task.TaskDto;
 import site.ph0en1x.task_management_sys.model.task.TaskMapper;
 import site.ph0en1x.task_management_sys.service.TaskService;
-import site.ph0en1x.task_management_sys.web.security.expression.CustomSecurityExpression;
 import site.ph0en1x.task_management_sys.web.validation.onCreate;
-
-import java.util.Collection;
 
 @RequiredArgsConstructor
 @RestController
@@ -79,31 +76,17 @@ public class TaskController {
         return taskMapper.toDto(task);
     }
 
-    @GetMapping("/author")
-    @Operation(summary = "Get all tasks by author ID, required param 'authorId' ")
-    public Collection<TaskDto> getTasksByAuthor(@RequestParam Long authorId) {
-        return taskMapper.toDto(
-                taskService.getTasksByOwnerId(authorId)
-        );
-    }
-
-    @GetMapping("/assignee")
-    @Operation(summary = "Get all tasks by assignee ID, required param 'assigneeId' ")
-    public Collection<TaskDto> getTasksByAssigneeId(@RequestParam Long assigneeId) {
-        return taskMapper.toDto(
-                taskService.getTasksByAssigneeId(assigneeId)
-        );
-    }
-
     @GetMapping
-    @Operation(summary = "Get all tasks with filters, required params: \n " +
-            " searchTerm - string with search line to search in title and description,\n" +
-            " status - string with status, \n" +
-            " priority - string with priority,\n" +
-            " author - ID of author,\n" +
-            " assignee - ID of assignee user." +
-            "pageSize - count of task on page default is 2, " +
-            "pageNumber - number of page, default is 0")
+    @Operation(summary = """
+            Get all tasks with filters, required params:\s
+             \
+            searchTerm - string with search line to search in title and description,
+            status - string with status,\s
+            priority - string with priority,
+            author - ID of author,
+            assignee - ID of assignee user.\
+            pageSize - count of task on page default is 2, \
+            pageNumber - number of page, default is 0""")
     public Page<TaskDto> getTasksWithFilter(
             @RequestParam(required = false) String searchTerm,
             @RequestParam(required = false) String status,
