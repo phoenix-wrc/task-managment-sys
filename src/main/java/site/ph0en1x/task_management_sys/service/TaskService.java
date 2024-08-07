@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.ph0en1x.task_management_sys.model.exception.ResourceNotFoundException;
 import site.ph0en1x.task_management_sys.model.task.Task;
+import site.ph0en1x.task_management_sys.model.task.TaskPriority;
 import site.ph0en1x.task_management_sys.model.task.TaskStatus;
 import site.ph0en1x.task_management_sys.repository.TaskRepository;
 
@@ -54,7 +55,7 @@ public class TaskService {
     @Transactional
     public Task updateTaskStatus(TaskStatus taskStatus, Long id) {
         Task save = getTask(id);
-                save.setStatus(taskStatus);
+        save.setStatus(taskStatus);
         return taskRepository.save(save);
     }
 
@@ -69,10 +70,23 @@ public class TaskService {
             int pageNumber
     ) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        if (searchTerm == null) {
+            searchTerm = "";
+        }
+        TaskStatus taskStatus = null;
+        if (status != null) {
+            status = status.toUpperCase();
+            taskStatus = TaskStatus.valueOf(status);
+        }
+        TaskPriority taskPriority = null;
+        if (priority != null) {
+            priority = priority.toUpperCase();
+            taskPriority = TaskPriority.valueOf(priority);
+        }
         return taskRepository.findAll(
-                searchTerm.toLowerCase(),
-                status,
-                priority,
+                searchTerm,
+                taskStatus,
+                taskPriority,
                 author,
                 assignee,
                 pageable

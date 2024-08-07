@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import site.ph0en1x.task_management_sys.model.task.Task;
+import site.ph0en1x.task_management_sys.model.task.TaskPriority;
+import site.ph0en1x.task_management_sys.model.task.TaskStatus;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
@@ -18,8 +20,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             "AND (:assignee IS NULL OR t.assignee.id = :assignee)")
     Page<Task> findAll(
             @Param("searchTerm") String searchTerm,
-            @Param("status") String status,
-            @Param("priority") String priority,
+            @Param("status") TaskStatus status,
+            @Param("priority") TaskPriority priority,
             @Param("author") Long author,
             @Param("assignee") Long assignee,
             Pageable pageable
