@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import site.ph0en1x.task_management_sys.model.task.TaskPriority;
+import site.ph0en1x.task_management_sys.model.task.TaskStatus;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -98,6 +100,23 @@ public class ControllerAdvice {
             return new ExceptionBody("There is no user with one of specified ID in the database");
         }
         return new ExceptionBody("Unknown Data Integrity error.");
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionBody handlerIllegalArgumentException(IllegalArgumentException exception) {
+        log.debug("{} {}", exception.getMessage(), exception.getClass().getName());
+        if (exception.getMessage().contains(
+                "No enum constant site.ph0en1x.task_management_sys.model.task.TaskPriority")) {
+            return new ExceptionBody("There is no TaskPriority with specified text. " +
+                    "Task priority could be: " + Arrays.toString(TaskPriority.values()));
+        }
+        if (exception.getMessage().contains(
+                "No enum constant site.ph0en1x.task_management_sys.model.task.TaskStatus")) {
+            return new ExceptionBody("There is no TaskStatus with specified text. " +
+                    "Task priority could be: " + Arrays.toString(TaskStatus.values()));
+        }
+        return new ExceptionBody("Not correct parameter. Check your parameters.");
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
