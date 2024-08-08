@@ -45,7 +45,7 @@ public class TestConfig {
 
     @Bean
     public JwtTokenProvider jwtTokenProvider() {
-        return new JwtTokenProvider(jwtProperties(), userDetailsService(),userService());
+        return new JwtTokenProvider(jwtProperties(), userDetailsService(), userService());
     }
 
     @Bean

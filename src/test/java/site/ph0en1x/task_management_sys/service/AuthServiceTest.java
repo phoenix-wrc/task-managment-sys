@@ -4,11 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import site.ph0en1x.task_management_sys.model.auth.JwtRequest;
 import site.ph0en1x.task_management_sys.model.auth.JwtResponse;
 import site.ph0en1x.task_management_sys.model.user.Roles;
@@ -19,8 +16,8 @@ import site.ph0en1x.task_management_sys.web.security.JwtTokenProvider;
 
 import java.util.Set;
 
-import static org.hamcrest.Matchers.any;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
