@@ -1,7 +1,7 @@
 package site.ph0en1x.task_management_sys.service;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +12,6 @@ import site.ph0en1x.task_management_sys.model.exception.ResourceNotFoundExceptio
 import site.ph0en1x.task_management_sys.model.task.Task;
 import site.ph0en1x.task_management_sys.model.task.TaskPriority;
 import site.ph0en1x.task_management_sys.model.task.TaskStatus;
-import site.ph0en1x.task_management_sys.model.user.User;
 import site.ph0en1x.task_management_sys.repository.TaskRepository;
 
 import java.time.LocalDateTime;
@@ -25,7 +24,7 @@ public class TaskService {
     private final TaskRepository taskRepository;
 
     @Transactional
-    public Task createTask(Task task) {
+    public Task createTask(@NonNull Task task) {
         task.setCreatedAt(LocalDateTime.now());
         task.setId(null);
         return taskRepository.save(task);
@@ -65,9 +64,12 @@ public class TaskService {
 
     @Transactional
     public Task updateTaskStatus(TaskStatus taskStatus, Long id) {
-        Task savedTask = getTask(id);
-        return taskRepository.save(savedTask);
-//        return taskRepository.updateStatusById(id, taskStatus);
+        if (taskStatus == null) {
+            throw new IllegalArgumentException("New status is null");
+        }
+        Task task = getTask(id);
+        task.setStatus(taskStatus);
+        return taskRepository.save(task);
     }
 
     @Transactional(readOnly = true)
@@ -81,6 +83,7 @@ public class TaskService {
             int pageNumber
     ) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
         if (searchTerm == null) {
             searchTerm = "";
         }
@@ -103,4 +106,5 @@ public class TaskService {
                 pageable
         );
     }
+
 }
