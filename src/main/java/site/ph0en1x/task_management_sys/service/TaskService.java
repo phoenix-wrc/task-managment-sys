@@ -1,5 +1,6 @@
 package site.ph0en1x.task_management_sys.service;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import site.ph0en1x.task_management_sys.model.exception.ResourceNotFoundExceptio
 import site.ph0en1x.task_management_sys.model.task.Task;
 import site.ph0en1x.task_management_sys.model.task.TaskPriority;
 import site.ph0en1x.task_management_sys.model.task.TaskStatus;
+import site.ph0en1x.task_management_sys.model.user.User;
 import site.ph0en1x.task_management_sys.repository.TaskRepository;
 
 import java.time.LocalDateTime;
@@ -31,10 +33,19 @@ public class TaskService {
 
     @Transactional
     public Task updateTask(Task task) {
-        if (!taskRepository.existsById(task.getId())) {
-            throw new ResourceNotFoundException("Task with that ID not found");
-        }
-        return taskRepository.save(task);
+        Task taskToUpdate = taskRepository.findById(task.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("Task with that ID not found")
+        );
+        if (task.getTitle() != null) taskToUpdate.setTitle(task.getTitle());
+        if (task.getDescription() != null) taskToUpdate.setDescription(task.getDescription());
+        if (task.getStatus() != null) taskToUpdate.setStatus(task.getStatus());
+        if (task.getPriority() != null) taskToUpdate.setPriority(task.getPriority());
+        if (task.getAssignee() != null) taskToUpdate.setAssignee(task.getAssignee());
+        if (task.getCreatedAt() != null) taskToUpdate.setCreatedAt(task.getCreatedAt());
+        if (task.getUpdatedAt() != null) taskToUpdate.setUpdatedAt(task.getUpdatedAt());
+
+        // Почему то не работает автоматом, придется в ручную чекать и инсертить
+        return taskRepository.save(taskToUpdate);
     }
 
     @Transactional
@@ -54,9 +65,9 @@ public class TaskService {
 
     @Transactional
     public Task updateTaskStatus(TaskStatus taskStatus, Long id) {
-        Task save = getTask(id);
-        save.setStatus(taskStatus);
-        return taskRepository.save(save);
+        Task savedTask = getTask(id);
+        return taskRepository.save(savedTask);
+//        return taskRepository.updateStatusById(id, taskStatus);
     }
 
     @Transactional(readOnly = true)
