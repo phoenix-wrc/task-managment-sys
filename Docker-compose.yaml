@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+    container_name: Task_management_system
+    depends_on:
+    - db
+    env_file:
+      - example.env
+    ports:
+      - '8080:8080'
+  db:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      - POSTGRES_USER=${SPRING_DATASOURCE_USERNAME}
+      - POSTGRES_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB_NAME}
+    volumes:
+      - ./src/main/resources/db-init:/docker-entrypoint-initdb.d
