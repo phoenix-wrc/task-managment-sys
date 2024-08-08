@@ -1,6 +1,7 @@
 package site.ph0en1x.task_management_sys.model.exception;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,12 @@ public class ControllerAdvice {
     @ExceptionHandler(site.ph0en1x.task_management_sys.model.exception.ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionBody handlerResourceNotFound(ResourceNotFoundException ex) {
+        return new ExceptionBody(ex.getMessage());
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionBody handlerResourceNotFound(EntityNotFoundException ex) {
         return new ExceptionBody(ex.getMessage());
     }
 
@@ -85,7 +92,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionBody handlerExpiredJwtException(ExpiredJwtException ex) {
         log.debug("handlerExpiredJwtException {}", ex.getMessage());
         return new ExceptionBody("User's token has expired. Please refresh token");
@@ -116,6 +123,7 @@ public class ControllerAdvice {
             return new ExceptionBody("There is no TaskStatus with specified text. " +
                     "Task priority could be: " + Arrays.toString(TaskStatus.values()));
         }
+        log.debug(Arrays.toString(exception.getStackTrace()));
         return new ExceptionBody("Not correct parameter. Check your parameters.");
     }
 

@@ -9,6 +9,8 @@ import site.ph0en1x.task_management_sys.model.task.Task;
 import site.ph0en1x.task_management_sys.model.task.TaskPriority;
 import site.ph0en1x.task_management_sys.model.task.TaskStatus;
 
+import java.time.LocalDateTime;
+
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("SELECT t FROM Task t WHERE " +
@@ -26,4 +28,5 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             @Param("assignee") Long assignee,
             Pageable pageable
     );
+
 }

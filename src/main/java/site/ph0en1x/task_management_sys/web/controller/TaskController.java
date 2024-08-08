@@ -36,7 +36,7 @@ public class TaskController {
 
     @PutMapping()
     @Operation(summary = "Update task")
-    @PreAuthorize("@customSecurityExpression.canAccessToTask(#task.authorId())")
+    @PreAuthorize("@customSecurityExpression.canAccessToTask(#task.id)")
     public TaskDto updateTask(@RequestBody TaskDto task) {
         log.debug("Update task {}", task.toString());
         return taskMapper.toDto(
