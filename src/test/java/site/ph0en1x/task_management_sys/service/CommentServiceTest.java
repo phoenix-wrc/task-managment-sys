@@ -8,6 +8,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -17,6 +21,9 @@ import site.ph0en1x.task_management_sys.repository.CommentRepository;
 import site.ph0en1x.task_management_sys.repository.TaskRepository;
 import site.ph0en1x.task_management_sys.repository.UserRepository;
 import site.ph0en1x.task_management_sys.web.security.expression.CustomSecurityExpression;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -54,9 +61,10 @@ class CommentServiceTest {
     @Test
     void getComments() {
     }
+
     @Test
     void createComment_withValidComment_shouldSetUserIdAndSaveComment() {
-        try(MockedStatic<CustomSecurityExpression> mockedStatic = Mockito.mockStatic(CustomSecurityExpression.class)) {
+        try (MockedStatic<CustomSecurityExpression> mockedStatic = Mockito.mockStatic(CustomSecurityExpression.class)) {
             // Arrange
             Long userId = 1L;
             Comment comment = getCommentWith(null, 1L, null, "Test Comment");
@@ -75,7 +83,7 @@ class CommentServiceTest {
     @Test
     void createComment_shouldSetUserIdFromSecurityContext() {
 
-        try(MockedStatic<CustomSecurityExpression> mockedStatic = Mockito.mockStatic(CustomSecurityExpression.class)) {
+        try (MockedStatic<CustomSecurityExpression> mockedStatic = Mockito.mockStatic(CustomSecurityExpression.class)) {
             // Arrange
             Long userId = 1L;
             Comment comment = getCommentWith(null, null, null, "Test Comment");
@@ -93,7 +101,7 @@ class CommentServiceTest {
 
     @Test
     void createComment_shouldSaveCommentToRepository() {
-        try(MockedStatic<CustomSecurityExpression> mockedStatic = Mockito.mockStatic(CustomSecurityExpression.class)) {
+        try (MockedStatic<CustomSecurityExpression> mockedStatic = Mockito.mockStatic(CustomSecurityExpression.class)) {
             // Arrange
             Long userId = 1L;
 
@@ -111,106 +119,97 @@ class CommentServiceTest {
         }
     }
 
-    /*
+    //GetComment tests
 
     @Test
-    void testGetTasksWithAllParameters() {
+    void getComments_withValidParameters_shouldReturnCommentsPage() {
         // Arrange
+        Long taskId = 1L;
         String searchTerm = "test";
-        String status = "IN_PROGRESS";
-        String priority = "HIGH";
-        Long author = 1L;
-        Long assignee = 2L;
+        Long author = null; // null means no author filter
         int pageSize = 10;
         int pageNumber = 0;
-
-        List<Task> tasks = Arrays.asList(
-                getTaskWith(1L, "Task 1", "description",
-                        TaskStatus.IN_PROGRESS, TaskPriority.HIGH, 1L, 2L),
-                getTaskWith(2L, "Task 2", "description",
-                        TaskStatus.IN_PROGRESS, TaskPriority.HIGH, 1L, 2L)
-        );
-        Page<Task> expectedPage = new PageImpl<>(tasks, PageRequest.of(pageNumber, pageSize), tasks.size());
-
-        when(taskRepository.findAll(
-                anyString(),
-                any(TaskStatus.class),
-                any(TaskPriority.class),
-                anyLong(),
-                anyLong(),
-                any(Pageable.class))).thenReturn(expectedPage);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        List<Comment> comments = new ArrayList<>();
+        comments.add(getCommentWith(1L, taskId, 1L, "Test Comment 1"));
+        comments.add(getCommentWith(2L, taskId, 2L, "Test Comment 2"));
+        Page<Comment> expectedPage = new PageImpl<>(comments, pageable, comments.size());
+        when(commentRepository.findAll(searchTerm, taskId, author, pageable)).thenReturn(expectedPage);
 
         // Act
-        Page<Task> actualPage = taskService.getTasks(
-                searchTerm,
-                status,
-                priority,
-                author,
-                assignee,
-                pageSize,
-                pageNumber);
+        Page<Comment> result = commentService.getComments(taskId, searchTerm, author, pageSize, pageNumber);
 
         // Assert
-        verify(taskRepository, times(1)).findAll(
-                searchTerm,
-                TaskStatus.valueOf(status),
-                TaskPriority.valueOf(priority),
-                author,
-                assignee,
-                PageRequest.of(pageNumber, pageSize));
-        assertEquals(expectedPage, actualPage);
+        assertEquals(expectedPage, result);
+        verify(commentRepository, times(1)).findAll(searchTerm, taskId, author, pageable);
     }
 
     @Test
-    void testGetTasksWithNullSearchTerm() {
+    void getComments_withNullSearchTerm_shouldUseEmptySearchTerm() {
         // Arrange
+        Long taskId = 1L;
         String searchTerm = null;
-        String status = "IN_PROGRESS";
-        String priority = "HIGH";
-        Long author = 1L;
-        Long assignee = 2L;
+        Long author = null; // null means no author filter
         int pageSize = 10;
         int pageNumber = 0;
-
-        List<Task> tasks = Arrays.asList(
-                getTaskWith(1L, "Task 1", "description", TaskStatus.valueOf(status),
-                        TaskPriority.valueOf(priority) , author, assignee),
-                getTaskWith(2L, "Task 2", "description", TaskStatus.valueOf(status),
-                        TaskPriority.valueOf(priority), author, assignee)
-        );
-        Page<Task> expectedPage = new PageImpl<>(tasks, PageRequest.of(pageNumber, pageSize), tasks.size());
-
-        when(taskRepository.findAll(
-                nullable(String.class),
-                any(TaskStatus.class),
-                any(TaskPriority.class),
-                anyLong(),
-                anyLong(),
-                any(Pageable.class)))
-                    .thenReturn(expectedPage);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        List<Comment> comments = new ArrayList<>();
+        comments.add(getCommentWith(1L, taskId, 1L, "Test Comment 1"));
+        comments.add(getCommentWith(2L, taskId, 2L, "Test Comment 2"));
+        Page<Comment> expectedPage = new PageImpl<>(comments, pageable, comments.size());
+        when(commentRepository.findAll("", taskId, author, pageable)).thenReturn(expectedPage);
 
         // Act
-
-        Page<Task> actualPage = taskService.getTasks(
-                searchTerm,
-                status,
-                priority,
-                author,
-                assignee,
-                pageSize,
-                pageNumber);
+        Page<Comment> result = commentService.getComments(taskId, searchTerm, author, pageSize, pageNumber);
 
         // Assert
-        verify(taskRepository, times(1)).findAll(
-                "",
-                TaskStatus.valueOf(status),
-                TaskPriority.valueOf(priority),
-                author,
-                assignee,
-                PageRequest.of(pageNumber, pageSize));
-        assertEquals(expectedPage, actualPage);
+        assertEquals(expectedPage, result);
+        verify(commentRepository, times(1)).findAll("", taskId, author, pageable);
+    }
+
+    @Test
+    void getComments_withAuthorFilter_shouldApplyAuthorFilter() {
+        // Arrange
+        Long taskId = 1L;
+        String searchTerm = "";
+        Long author = 1L;
+        int pageSize = 10;
+        int pageNumber = 0;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        List<Comment> comments = new ArrayList<>();
+        comments.add(getCommentWith(1L, taskId, author, "Test Comment 1"));
+        Page<Comment> expectedPage = new PageImpl<>(comments, pageable, comments.size());
+        when(commentRepository.findAll(searchTerm, taskId, author, pageable)).thenReturn(expectedPage);
+
+        // Act
+        Page<Comment> result = commentService.getComments(taskId, searchTerm, author, pageSize, pageNumber);
+
+        // Assert
+        assertEquals(expectedPage, result);
+        verify(commentRepository, times(1)).findAll(searchTerm, taskId, author, pageable);
     }
 
 
-     */
+    @Test
+    void getComments_withEmptySearchTerm_shouldReturnAllComments() {
+        // Arrange
+        Long taskId = 1L;
+        String searchTerm = "";
+        Long author = null; // null means no author filter
+        int pageSize = 10;
+        int pageNumber = 0;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        List<Comment> comments = new ArrayList<>();
+        comments.add(getCommentWith(1L, taskId, 1L, "Test Comment 1"));
+        comments.add(getCommentWith(2L, taskId, 2L, "Test Comment 2"));
+        Page<Comment> expectedPage = new PageImpl<>(comments, pageable, comments.size());
+        when(commentRepository.findAll(searchTerm, taskId, author, pageable)).thenReturn(expectedPage);
+
+        // Act
+        Page<Comment> result = commentService.getComments(taskId, searchTerm, author, pageSize, pageNumber);
+
+        // Assert
+        assertEquals(expectedPage, result);
+        verify(commentRepository, times(1)).findAll(searchTerm, taskId, author, pageable);
+    }
 }

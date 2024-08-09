@@ -4,7 +4,7 @@ spring:
   application:
     name: task-management-sys
   datasource:
-    url: jdbc:postgresql://${HOST}:${DB_PORT}/${POSTGRES_DB_NAME}?currentSchema=${POSTGRES_DB_SCHEMA_NAME}
+    url: jdbc:postgresql://${HOST}:${DB_PORT}/${POSTGRES_DB_NAME}?currentSchema=task_management_sys_schema
     username: ${POSTGRES_USERNAME}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver

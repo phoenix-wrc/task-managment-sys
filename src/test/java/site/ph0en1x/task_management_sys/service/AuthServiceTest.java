@@ -1,11 +1,17 @@
 package site.ph0en1x.task_management_sys.service;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import site.ph0en1x.TestConfig;
 import site.ph0en1x.task_management_sys.model.auth.JwtRequest;
 import site.ph0en1x.task_management_sys.model.auth.JwtResponse;
 import site.ph0en1x.task_management_sys.model.user.Roles;
@@ -24,7 +30,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static site.ph0en1x.TestUtil.getUserWith;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@ActiveProfiles("test")
+@Import(TestConfig.class)
+@ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
 
     @MockBean
@@ -96,8 +105,6 @@ class AuthServiceTest {
         assertThrows(RuntimeException.class, () -> authService.login(loginRequest));
     }
 
-
-
     @Test
     void testRefresh() {
         String accessToken = "AccessToken";
@@ -114,8 +121,5 @@ class AuthServiceTest {
 
         verify(tokenProvider).refreshUserTokens(refreshToken);
         assertEquals(NewRefreshToken, jwtResponse.getRefreshToken());
-
-
-
     }
 }
