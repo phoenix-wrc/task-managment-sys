@@ -22,29 +22,25 @@
 									"\r",
 									"pm.test('Get username user', function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.username).to.eql('spidy@rambler.ru');\r",
+									"    pm.expect(jsonData.email).to.eql('spidy@rambler.ru');\r",
 									"})\r",
 									"\r",
 									"pm.test('Get name user', function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.name).to.eql('Peter');\r",
-									"});\r",
-									"\r",
-									"pm.test('Get second name user', function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.fatherName).to.eql('Ben');\r",
+									"    pm.expect(jsonData.firstName).to.eql('Peter');\r",
 									"});\r",
 									"\r",
 									"pm.test('Get last name user', function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.lastname).to.eql('Parker');\r",
+									"    pm.expect(jsonData.lastName).to.eql('Parker');\r",
 									"});\r",
 									"\r",
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.environment.set(\"ENV_parker_id\",jsonData.id);\r",
+									"pm.collectionVariables.set(\"parker_id_tms\",jsonData.id);\r",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -53,7 +49,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"Peter\",\r\n    \"password\": \"54321\",\r\n    \"passwordConfirmation\": \"54321\",\r\n    \"fatherName\": \"Ben\",\r\n    \"lastname\": \"Parker\",\r\n    \"username\": \"spidy@rambler.ru\"\r\n}",
+							"raw": "{\r\n    \"firstName\":\"Peter\",\r\n    \"lastName\": \"Parker\",\r\n    \"email\": \"spidy@rambler.ru\",\r\n    \"password\": \"54321\",\r\n    \"passwordConfirmation\": \"54321\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -61,12 +57,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{ENV_base_url}}/auth/registration",
+							"raw": "{{base_url_tms}}auth/registration",
 							"host": [
-								"{{ENV_base_url}}"
+								"{{base_url_tms}}auth"
 							],
 							"path": [
-								"auth",
 								"registration"
 							]
 						}
@@ -167,7 +162,7 @@
 									"\r",
 									"pm.test('Check ID', function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"ENV_parker_id\"));\r",
+									"pm.expect(parseInt(pm.collectionVariables.get(\"parker_id_tms\"))).to.eql(jsonData.id);\r",
 									"})\r",
 									"\r",
 									"pm.test('Get name user', function () {\r",
@@ -176,22 +171,22 @@
 									"});\r",
 									"\r",
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.environment.set(\"ENV_access_bearer_token\",jsonData.accessToken);\r",
 									"\r",
-									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.environment.set(\"ENV_refresh_bearer_token\",jsonData.refreshToken);\r",
+									"pm.collectionVariables.set(\"refresh_bearer_token_tms\", jsonData.refreshToken);\r",
+									"pm.collectionVariables.set(\"access_bearer_token_tms\", jsonData.accessToken);\r",
 									"\r",
 									"pm.test('check access token from global env', function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.accessToken).to.eql(pm.environment.get(\"ENV_access_bearer_token\"));\r",
+									"    pm.expect(jsonData.accessToken).to.eql(pm.collectionVariables.get(\"access_bearer_token_tms\"));\r",
 									"});\r",
 									"\r",
 									"pm.test('check refresh token from global env', function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.refreshToken).to.eql(pm.environment.get(\"ENV_refresh_bearer_token\"));\r",
+									"    pm.expect(jsonData.refreshToken).to.eql(pm.collectionVariables.get(\"refresh_bearer_token_tms\"));\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -208,12 +203,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/auth/login",
+							"raw": "{{base_url_tms}}auth/login",
 							"host": [
-								"{{base_url}}"
+								"{{base_url_tms}}auth"
 							],
 							"path": [
-								"auth",
 								"login"
 							]
 						}
@@ -314,7 +308,7 @@
 									"\r",
 									"pm.test('Check ID', function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"ENV_parker_id\"));\r",
+									"pm.expect(parseInt(pm.collectionVariables.get(\"parker_id_tms\"))).to.eql(jsonData.id);\r",
 									"})\r",
 									"\r",
 									"pm.test('Get name user', function () {\r",
@@ -323,35 +317,29 @@
 									"});\r",
 									"\r",
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.environment.set(\"ENV_access_bearer_token\",jsonData.accessToken);\r",
+									"pm.collectionVariables.set(\"access_bearer_token_tms\",jsonData.accessToken);\r",
 									"\r",
 									"var jsonData = JSON.parse(responseBody);\r",
-									"pm.environment.set(\"ENV_refresh_bearer_token\",jsonData.refreshToken);\r",
+									"pm.collectionVariables.set(\"refresh_bearer_token_tms\",jsonData.refreshToken);\r",
 									"\r",
 									"pm.test('check access token from global env', function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.accessToken).to.eql(pm.environment.get(\"ENV_access_bearer_token\"));\r",
+									"    pm.expect(jsonData.accessToken).to.eql(pm.collectionVariables.get(\"access_bearer_token_tms\"));\r",
 									"});\r",
 									"\r",
 									"pm.test('check refresh token from global env', function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.refreshToken).to.eql(pm.environment.get(\"ENV_refresh_bearer_token\"));\r",
+									"    pm.expect(jsonData.refreshToken).to.eql(pm.collectionVariables.get(\"refresh_bearer_token_tms\"));\r",
 									"});"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_bearer_token}}",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "POST",
 						"header": [
@@ -364,7 +352,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{{ENV_refresh_bearer_token}}",
+							"raw": "{{refresh_bearer_token_tms}}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -372,12 +360,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{ENV_base_url}}/auth/refresh",
+							"raw": "{{base_url_tms}}auth/refresh",
 							"host": [
-								"{{ENV_base_url}}"
+								"{{base_url_tms}}auth"
 							],
 							"path": [
-								"auth",
 								"refresh"
 							]
 						}
@@ -410,8 +397,698 @@
 			]
 		},
 		{
-			"name": "existing data",
+			"name": "User",
 			"item": [
+				{
+					"name": "get user by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Check ID', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"pm.expect(parseInt(pm.collectionVariables.get(\"parker_id_tms\"))).to.eql(jsonData.id);\r",
+									"})\r",
+									"\r",
+									"pm.test('Check email', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"pm.expect(\"spidy@rambler.ru\").to.eql(jsonData.email);\r",
+									"})\r",
+									"\r",
+									"pm.test('Check firstName', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"pm.expect(\"Peter\").to.eql(jsonData.firstName);\r",
+									"})\r",
+									"\r",
+									"pm.test('Check lastName', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"pm.expect(\"Parker\").to.eql(jsonData.lastName);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_tms}}user/{{parker_id_tms}}",
+							"host": [
+								"{{base_url_tms}}user"
+							],
+							"path": [
+								"{{parker_id_tms}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_bearer_token_tms}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Create new task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"if(pm.response.to.have.status(200)) {\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"    pm.collectionVariables.set(\"last_added_task_id\",jsonData.id);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_bearer_token_tms}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ENV_access_bearer_token}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Get spiderweb\",\r\n  \"description\": \"Try new recipe of spiderweb\",\r\n  \"status\": \"PENDING\",\r\n  \"priority\": \"MEDIUM\",\r\n  \"assigneeId\": {{parker_id_tms}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_tms}}tasks",
+							"host": [
+								"{{base_url_tms}}tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get task by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Check ID', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"pm.expect(parseInt(pm.collectionVariables.get(\"last_added_task_id\"))).to.eql(jsonData.id);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_tms}}tasks/{{last_added_task_id}}",
+							"host": [
+								"{{base_url_tms}}tasks"
+							],
+							"path": [
+								"{{last_added_task_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Get task id', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.id).to.eql(parseInt(pm.collectionVariables.get('last_added_task_id')));\r",
+									"})\r",
+									"\r",
+									"pm.test('Get title', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.title).to.eql(\"Updated title\");\r",
+									"});\r",
+									"\r",
+									"pm.test('Get description', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.description).to.eql(\"Updated description\");\r",
+									"});\r",
+									"\r",
+									"pm.test('Get status', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.status).to.eql(\"IN_PROGRESS\");\r",
+									"});\r",
+									"\r",
+									"pm.test('Get priority', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.priority).to.eql(\"LOW\");\r",
+									"});\r",
+									"\r",
+									"pm.test('Get assigneeId', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.assigneeId).to.eql(parseInt(pm.collectionVariables.get('parker_id_tms')));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_bearer_token_tms}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ENV_access_bearer_token}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": {{last_added_task_id}},\r\n  \"title\": \"Updated title\",\r\n   \"description\": \"Updated description\",\r\n  \"status\": \"IN_PROGRESS\",\r\n  \"priority\": \"LOW\",\r\n  \"authorId\": {{parker_id_tms}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_tms}}tasks",
+							"host": [
+								"{{base_url_tms}}tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all tasks by default",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Check content', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"pm.expect(jsonData.content.length).to.eql(2)\r",
+									"});\r",
+									"\r",
+									"pm.test('Check content', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"pm.expect(parseInt(pm.collectionVariables.get(\"first_added_task_id\")))\r",
+									".to.eql(jsonData.content[1].id)\r",
+									"});\r",
+									"\r",
+									"// pm.test('Check ID', function () {\r",
+									"//     var jsonData = pm.response.json();\r",
+									"// pm.expect(parseInt(pm.collectionVariables.get(\"last_added_task_id\"))).to.eql(jsonData.id);\r",
+									"// })\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_tms}}tasks",
+							"host": [
+								"{{base_url_tms}}tasks"
+							],
+							"query": [
+								{
+									"key": "pageSize",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "pageNumber",
+									"value": "0",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all tasks by assignee id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Check ID', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"pm.expect(parseInt(pm.collectionVariables.get(\"last_added_task_id\"))).to.eql(jsonData.id);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_tms}}tasks?assigneeId={{parker_id_tms}}",
+							"host": [
+								"{{base_url_tms}}tasks"
+							],
+							"query": [
+								{
+									"key": "assigneeId",
+									"value": "{{parker_id_tms}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_bearer_token_tms}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "Create new comments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Get taskId', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.taskId).to.eql(parseInt(pm.collectionVariables.get(\"last_added_task_id\")));\r",
+									"})\r",
+									"\r",
+									"pm.test('Get name user', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.userId).to.eql(parseInt(pm.collectionVariables.get(\"parker_id_tms\")));\r",
+									"});\r",
+									"\r",
+									"pm.test('Get text', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.text).to.eql('A bla-bla-bla');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_bearer_token_tms}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ENV_access_bearer_token}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"text\": \"A bla-bla-bla\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url_tms}}comments/{{last_added_task_id}}",
+							"host": [
+								"{{base_url_tms}}comments"
+							],
+							"path": [
+								"{{last_added_task_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all tasks by author id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Check task ID', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"pm.expect(parseInt(pm.collectionVariables.get(\"last_added_task_id\"))).to.eql(jsonData[0].taskId);\r",
+									"})\r",
+									"\r",
+									"pm.test('Check user ID', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"pm.expect(parseInt(pm.collectionVariables.get(\"parker_id_tms\"))).to.eql(jsonData[0].userId);\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url_tms}}comments/{{last_added_task_id}}",
+							"host": [
+								"{{base_url_tms}}comments"
+							],
+							"path": [
+								"{{last_added_task_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_bearer_token_tms}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "negativTests",
+			"item": [
+				{
+					"name": "Negative",
+					"item": [
+						{
+							"name": "Create new comments with null in text",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 403', function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"})\r",
+											"\r",
+											"pm.test('Get taskId', function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql(\"Validation failed\");\r",
+											"})\r",
+											"\r",
+											"pm.test('Get name user', function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.errors.text).to.eql(\"Text of comment must be not null\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_bearer_token_tms}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ENV_access_bearer_token}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"text\": null\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_tms}}comments/{{last_added_task_id}}",
+									"host": [
+										"{{base_url_tms}}comments"
+									],
+									"path": [
+										"{{last_added_task_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create new comments with short text",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test('Status code is 403', function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"})\r",
+											"\r",
+											"pm.test('Validation failed', function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.message).to.eql('Validation failed');\r",
+											"})\r",
+											"\r",
+											"pm.test('Validation failed text', function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.errors.text).to.eql('Text must be less than 1024 symbols and more then 4');\r",
+											"})"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_bearer_token_tms}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ENV_access_bearer_token}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"text\": \"123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url_tms}}comments/{{last_added_task_id}}",
+									"host": [
+										"{{base_url_tms}}comments"
+									],
+									"path": [
+										"{{last_added_task_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
 				{
 					"name": "Peter  double registration",
 					"event": [
@@ -722,104 +1399,6 @@
 					]
 				}
 			]
-		},
-		{
-			"name": "Tasks",
-			"item": [
-				{
-					"name": "Create new task",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{ENV_access_bearer_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{ENV_access_bearer_token}}",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"string\",\r\n  \"description\": \"string\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{ENV_base_url}}/user/{{ENV_parker_id}}/task",
-							"host": [
-								"{{ENV_base_url}}"
-							],
-							"path": [
-								"user",
-								"{{ENV_parker_id}}",
-								"task"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get task by id",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{ENV_access_bearer_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{ENV_base_url}}/task/{{ENV_task_id}}",
-							"host": [
-								"{{ENV_base_url}}"
-							],
-							"path": [
-								"task",
-								"{{ENV_task_id}}"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							""
-						]
-					}
-				}
-			]
 		}
 	],
 	"auth": {
@@ -859,17 +1438,32 @@
 			"disabled": true
 		},
 		{
-			"key": "access_bearer_token",
+			"key": "access_bearer_token_tms",
 			"value": "",
 			"type": "string"
 		},
 		{
-			"key": "base_url",
-			"value": "localhost:8080/api/v1",
+			"key": "base_url_tms",
+			"value": "localhost:8080/api/v1/",
 			"type": "string"
 		},
 		{
-			"key": "refresh_bearer_token",
+			"key": "refresh_bearer_token_tms",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "parker_id_tms",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "last_added_task_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "first_added_task_id",
 			"value": "",
 			"type": "string"
 		}
