@@ -12,6 +12,7 @@ public class TestUtil {
 
     public static Task getTaskWith(Long id,
                              String title,
+                             String description,
                              TaskStatus status,
                              TaskPriority priority,
                              Long author,

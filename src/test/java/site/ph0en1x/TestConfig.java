@@ -7,9 +7,11 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import site.ph0en1x.task_management_sys.repository.CommentRepository;
 import site.ph0en1x.task_management_sys.repository.TaskRepository;
 import site.ph0en1x.task_management_sys.repository.UserRepository;
 import site.ph0en1x.task_management_sys.service.AuthService;
+import site.ph0en1x.task_management_sys.service.CommentService;
 import site.ph0en1x.task_management_sys.service.TaskService;
 import site.ph0en1x.task_management_sys.service.UserService;
 import site.ph0en1x.task_management_sys.web.security.JwtTokenProvider;
@@ -23,6 +25,7 @@ public class TestConfig {
     private final AuthenticationManager authManager;
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     @Bean
     @Primary
@@ -52,6 +55,12 @@ public class TestConfig {
     @Primary
     public UserService userService() {
         return new UserService(userRepository, testPasswordEncoder());
+    }
+
+    @Bean
+    @Primary
+    public CommentService commentService() {
+        return new CommentService(commentRepository);
     }
 
     @Bean

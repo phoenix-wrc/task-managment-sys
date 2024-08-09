@@ -14,6 +14,7 @@ import site.ph0en1x.TestConfig;
 import site.ph0en1x.task_management_sys.model.exception.ResourceNotFoundException;
 import site.ph0en1x.task_management_sys.model.user.Roles;
 import site.ph0en1x.task_management_sys.model.user.User;
+import site.ph0en1x.task_management_sys.repository.CommentRepository;
 import site.ph0en1x.task_management_sys.repository.TaskRepository;
 import site.ph0en1x.task_management_sys.repository.UserRepository;
 
@@ -40,6 +41,12 @@ class UserServiceTest {
 
     @MockBean
     private TaskService taskService;
+
+    @MockBean
+    private CommentRepository commentRepository;
+
+    @MockBean
+    private CommentService commentService;
 
     @MockBean
     private BCryptPasswordEncoder passEncoder;

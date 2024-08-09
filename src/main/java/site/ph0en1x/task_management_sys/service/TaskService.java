@@ -40,8 +40,7 @@ public class TaskService {
         if (task.getStatus() != null) taskToUpdate.setStatus(task.getStatus());
         if (task.getPriority() != null) taskToUpdate.setPriority(task.getPriority());
         if (task.getAssignee() != null) taskToUpdate.setAssignee(task.getAssignee());
-        if (task.getCreatedAt() != null) taskToUpdate.setCreatedAt(task.getCreatedAt());
-        if (task.getUpdatedAt() != null) taskToUpdate.setUpdatedAt(task.getUpdatedAt());
+        taskToUpdate.setUpdatedAt(LocalDateTime.now());
 
         // Почему то не работает автоматом, придется в ручную чекать и инсертить
         return taskRepository.save(taskToUpdate);

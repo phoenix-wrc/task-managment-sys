@@ -10,6 +10,7 @@ import site.ph0en1x.task_management_sys.model.auth.JwtRequest;
 import site.ph0en1x.task_management_sys.model.auth.JwtResponse;
 import site.ph0en1x.task_management_sys.model.user.Roles;
 import site.ph0en1x.task_management_sys.model.user.User;
+import site.ph0en1x.task_management_sys.repository.CommentRepository;
 import site.ph0en1x.task_management_sys.repository.TaskRepository;
 import site.ph0en1x.task_management_sys.repository.UserRepository;
 import site.ph0en1x.task_management_sys.web.security.JwtTokenProvider;
@@ -40,6 +41,12 @@ class AuthServiceTest {
 
     @MockBean
     private JwtTokenProvider tokenProvider;
+
+    @MockBean
+    private CommentRepository commentRepository;
+
+    @MockBean
+    private CommentService commentService;
 
     @Autowired
     private AuthService authService;

@@ -18,16 +18,17 @@ import site.ph0en1x.task_management_sys.model.exception.ResourceNotFoundExceptio
 import site.ph0en1x.task_management_sys.model.task.Task;
 import site.ph0en1x.task_management_sys.model.task.TaskPriority;
 import site.ph0en1x.task_management_sys.model.task.TaskStatus;
+import site.ph0en1x.task_management_sys.repository.CommentRepository;
 import site.ph0en1x.task_management_sys.repository.TaskRepository;
 import site.ph0en1x.task_management_sys.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static site.ph0en1x.TestUtil.getTaskWith;
@@ -47,13 +48,116 @@ class TaskServiceTest {
     @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private CommentRepository commentRepository;
+
+    @MockBean
+    private CommentService commentService;
+
     @Autowired
     private TaskService taskService;
 
     @Test
+    void updateTask_withValidTask_shouldUpdateAndReturnUpdatedTask() {
+        // Arrange
+        Task existingTask = getTaskWith(1L, "Existing Title", "Existing Description",
+                TaskStatus.IN_PROGRESS, TaskPriority.HIGH, null, null);
+        existingTask.setUpdatedAt(LocalDateTime.now());
+        existingTask.setCreatedAt(LocalDateTime.now());
+
+        Task updatedTask = getTaskWith(1L, "Updated Title", "Updated Description",
+                TaskStatus.COMPLETED, TaskPriority.LOW, null, null);
+        existingTask.setUpdatedAt(LocalDateTime.now());
+        existingTask.setCreatedAt(LocalDateTime.now());
+
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(existingTask));
+        when(taskRepository.save(any(Task.class))).thenReturn(updatedTask);
+
+        // Act
+        Task result = taskService.updateTask(updatedTask);
+
+        // Assert
+        assertEquals(updatedTask, result);
+        verify(taskRepository, times(1)).findById(1L);
+        verify(taskRepository, times(1)).save(existingTask);
+    }
+
+    @Test
+    void updateTask_withInvalidId_shouldThrowResourceNotFoundException() {
+        // Arrange
+        Task task = getTaskWith(2L, "New Title", "New Description", TaskStatus.IN_PROGRESS,
+                TaskPriority.HIGH, null, null);
+        task.setUpdatedAt(LocalDateTime.now());
+        task.setCreatedAt(LocalDateTime.now());
+
+        when(taskRepository.findById(2L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> taskService.updateTask(task));
+        verify(taskRepository, times(1)).findById(2L);
+        verify(taskRepository, never()).save(any(Task.class));
+    }
+
+    @Test
+    void updateTask_withPartialUpdates_shouldUpdateOnlySpecifiedFields() {
+        // Arrange
+        Task existingTask = getTaskWith(1L, "Existing Title", "Existing Description",
+                TaskStatus.IN_PROGRESS, TaskPriority.HIGH, null, null);
+        existingTask.setUpdatedAt(LocalDateTime.now());
+        existingTask.setCreatedAt(LocalDateTime.now());
+
+        Task partialUpdate = getTaskWith(1L, "Updated Title", null,
+                null, null, null, null);
+
+        Task expectedUpdatedTask = getTaskWith(1L, "Updated Title", "Existing Description",
+                TaskStatus.IN_PROGRESS, TaskPriority.HIGH, null, null);
+        expectedUpdatedTask.setUpdatedAt(LocalDateTime.now());
+        expectedUpdatedTask.setCreatedAt(LocalDateTime.now());
+
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(existingTask));
+        when(taskRepository.save(any(Task.class))).thenReturn(expectedUpdatedTask);
+
+        // Act
+        Task result = taskService.updateTask(partialUpdate);
+
+        // Assert
+        assertEquals(expectedUpdatedTask, result);
+        verify(taskRepository, times(1)).findById(1L);
+        verify(taskRepository, times(1)).save(existingTask);
+    }
+
+    @Test
+    void updateTask_shouldUpdateUpdatedAtField() {
+        // Arrange
+        LocalDateTime initialUpdatedAt = LocalDateTime.now().minusMinutes(2);
+
+        Task existingTask = getTaskWith(1L, "Existing Title", "Existing Description",
+                TaskStatus.IN_PROGRESS, TaskPriority.HIGH, null, null);
+        existingTask.setUpdatedAt(initialUpdatedAt);
+        existingTask.setCreatedAt(LocalDateTime.now());
+
+        Task updatedTask = getTaskWith(1L, null, null, null,
+                null, null, null);
+        LocalDateTime updatedUpdatedAt = LocalDateTime.now();
+        updatedTask.setUpdatedAt(updatedUpdatedAt);
+
+        when(taskRepository.findById(1L)).thenReturn(Optional.of(existingTask));
+        when(taskRepository.save(any(Task.class))).thenReturn(updatedTask);
+
+        // Act
+        Task result = taskService.updateTask(updatedTask);
+
+        // Assert
+        assertNotEquals(initialUpdatedAt, existingTask.getUpdatedAt());
+        assertTrue(result.getUpdatedAt().isAfter(initialUpdatedAt));
+        verify(taskRepository, times(1)).findById(1L);
+        verify(taskRepository, times(1)).save(any(Task.class));
+    }
+
+    @Test
     void testCreateTask() {
         // 1. Подготовка тестовых данных
-        Task task = getTaskWith(null, "Тестовая задача", TaskStatus.PENDING,
+        Task task = getTaskWith(null, "Тестовая задача","description", TaskStatus.PENDING,
                 TaskPriority.HIGH, 1L, 1L);
         Task savedTask = new Task(); // Модель, которую вернет taskRepository.save
         savedTask.setId(1L); //  Присвойте ID, если в вашем коде  save возвращает модель с id
@@ -78,8 +182,10 @@ class TaskServiceTest {
         // Arrange
         Long taskId = 1L;
         TaskStatus newStatus = TaskStatus.COMPLETED;
-        Task existingTask = getTaskWith(taskId, "Test Task", TaskStatus.IN_PROGRESS, TaskPriority.HIGH, 1L, 2L);
-        Task updatedTask = getTaskWith(taskId, "Test Task", newStatus, TaskPriority.HIGH, 1L, 2L);
+        Task existingTask = getTaskWith(taskId, "Test Task","description",
+                TaskStatus.IN_PROGRESS, TaskPriority.HIGH, 1L, 2L);
+        Task updatedTask = getTaskWith(taskId, "Test Task", "description", newStatus,
+                TaskPriority.HIGH, 1L, 2L);
 
         when(taskRepository.findById(anyLong())).thenReturn(Optional.of(existingTask));
 
@@ -163,8 +269,10 @@ class TaskServiceTest {
         int pageNumber = 0;
 
         List<Task> tasks = Arrays.asList(
-                getTaskWith(1L, "Task 1", TaskStatus.IN_PROGRESS, TaskPriority.HIGH, 1L, 2L),
-                getTaskWith(2L, "Task 2", TaskStatus.IN_PROGRESS, TaskPriority.HIGH, 1L, 2L)
+                getTaskWith(1L, "Task 1", "description",
+                        TaskStatus.IN_PROGRESS, TaskPriority.HIGH, 1L, 2L),
+                getTaskWith(2L, "Task 2", "description",
+                        TaskStatus.IN_PROGRESS, TaskPriority.HIGH, 1L, 2L)
         );
         Page<Task> expectedPage = new PageImpl<>(tasks, PageRequest.of(pageNumber, pageSize), tasks.size());
 
@@ -209,9 +317,9 @@ class TaskServiceTest {
         int pageNumber = 0;
 
         List<Task> tasks = Arrays.asList(
-                getTaskWith(1L, "Task 1", TaskStatus.valueOf(status),
+                getTaskWith(1L, "Task 1", "description", TaskStatus.valueOf(status),
                         TaskPriority.valueOf(priority) , author, assignee),
-                getTaskWith(2L, "Task 2", TaskStatus.valueOf(status),
+                getTaskWith(2L, "Task 2", "description", TaskStatus.valueOf(status),
                         TaskPriority.valueOf(priority), author, assignee)
         );
         Page<Task> expectedPage = new PageImpl<>(tasks, PageRequest.of(pageNumber, pageSize), tasks.size());
@@ -252,7 +360,7 @@ class TaskServiceTest {
         // Arrange
         Long taskId = 1L;
         TaskStatus newStatus = TaskStatus.COMPLETED;
-        Task existingTask = getTaskWith(taskId,"Test Task", TaskStatus.IN_PROGRESS,
+        Task existingTask = getTaskWith(taskId,"Test Task", "description", TaskStatus.IN_PROGRESS,
                 TaskPriority.HIGH, 1L, 2L);
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
         when(taskRepository.save(any(Task.class)))
@@ -268,7 +376,7 @@ class TaskServiceTest {
         // Arrange
         Long taskId = 1L;
         TaskStatus newStatus = null;
-        Task existingTask = getTaskWith(taskId, "Test Task", TaskStatus.IN_PROGRESS,
+        Task existingTask = getTaskWith(taskId, "Test Task", "description", TaskStatus.IN_PROGRESS,
                 TaskPriority.HIGH, 1L, 2L);
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
 
@@ -289,9 +397,9 @@ class TaskServiceTest {
         int pageNumber = 0;
 
         List<Task> tasks = Arrays.asList(
-                getTaskWith(1L, "Task 1", TaskStatus.IN_PROGRESS,
+                getTaskWith(1L, "Task 1", "description", TaskStatus.IN_PROGRESS,
                         TaskPriority.valueOf(priority), author, assignee),
-                getTaskWith(2L, "Task 2", TaskStatus.IN_PROGRESS,
+                getTaskWith(2L, "Task 2", "description", TaskStatus.IN_PROGRESS,
                         TaskPriority.valueOf(priority), author, assignee)
         );
         Page<Task> expectedPage = new PageImpl<>(tasks, PageRequest.of(pageNumber, pageSize), tasks.size());
@@ -306,7 +414,8 @@ class TaskServiceTest {
                     .thenReturn(expectedPage);
 
         // Act
-        Page<Task> actualPage = taskService.getTasks(searchTerm, status, priority, author, assignee, pageSize, pageNumber);
+        Page<Task> actualPage = taskService.getTasks(searchTerm, status, priority, author,
+                assignee, pageSize, pageNumber);
 
         // Assert
         verify(taskRepository, times(1)).findAll(
@@ -331,9 +440,9 @@ class TaskServiceTest {
         int pageNumber = 0;
 
         List<Task> tasks = Arrays.asList(
-                getTaskWith(1L, "Task 1", TaskStatus.valueOf(status),
+                getTaskWith(1L, "Task 1", "description", TaskStatus.valueOf(status),
                         TaskPriority.HIGH, author, assignee),
-                getTaskWith(2L, "Task 2", TaskStatus.valueOf(status),
+                getTaskWith(2L, "Task 2", "description", TaskStatus.valueOf(status),
                         TaskPriority.HIGH, author, assignee)
         );
         Page<Task> expectedPage = new PageImpl<>(tasks, PageRequest.of(pageNumber, pageSize), tasks.size());
