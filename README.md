@@ -32,7 +32,9 @@
 Документация:
 
 • Swagger UI: Доступна по адресу /swagger-ui/.
+
 • Open API Specification: Доступна по адресу /v3/api-docs/.
+
 • API документация: Встроенная в Swagger UI.
 
 Запуск проекта:
