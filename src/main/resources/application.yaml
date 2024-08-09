@@ -1,10 +1,10 @@
 spring:
   config:
-    import: optional:file:example.env[.properties]
+    import: optional:file:.env[.properties]
   application:
     name: task-management-sys
   datasource:
-    url: jdbc:postgresql://${HOST}:${DB_PORT}/${POSTGRES_DB_NAME}?currentSchema=task_management_sys_schema
+    url: jdbc:postgresql://${HOST}:${DB_PORT}/${POSTGRES_DB_NAME}?currentSchema=${CURRENT_DB_SCHEMA}
     username: ${POSTGRES_USERNAME}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -15,15 +15,13 @@ spring:
         format_sql: true
         hbm2ddl:
           auto: update
+        default_schema: ${CURRENT_DB_SCHEMA}
     generate-ddl: true
     hibernate:
       ddl-auto: ${HIBERNATE_DDL_AUTO}
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
-  batch:
-    jdbc:
-      initialize-schema: always
 logging:
   level:
     org.springframework.web: ERROR
