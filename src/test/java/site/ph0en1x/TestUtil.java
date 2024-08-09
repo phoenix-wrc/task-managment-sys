@@ -1,11 +1,14 @@
 package site.ph0en1x;
 
+import jakarta.persistence.*;
+import site.ph0en1x.task_management_sys.model.comment.Comment;
 import site.ph0en1x.task_management_sys.model.task.Task;
 import site.ph0en1x.task_management_sys.model.task.TaskPriority;
 import site.ph0en1x.task_management_sys.model.task.TaskStatus;
 import site.ph0en1x.task_management_sys.model.user.Roles;
 import site.ph0en1x.task_management_sys.model.user.User;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 public class TestUtil {
@@ -44,4 +47,21 @@ public class TestUtil {
         user.setRoles(roleUser);
         return user;
     }
+
+    public static Comment getCommentWith(Long id,
+                                      Long taskId,
+                                         Long userId,
+                                      String text) {
+        Comment comment = new Comment();
+        comment.setId(id);
+        comment.setText(text);
+        User user = new User();
+        user.setId(userId);
+        comment.setUser(user);
+        Task task = new Task();
+        task.setId(taskId);
+        comment.setTask(task);
+        return comment;
+    }
+
 }

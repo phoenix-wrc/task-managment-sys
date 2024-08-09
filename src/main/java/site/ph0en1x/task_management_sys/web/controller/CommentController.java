@@ -25,9 +25,8 @@ public class CommentController {
     @Operation(summary = "Create an comment to task.")
     public CommentDTO createComment(@PathVariable("taskId") Long taskId,
                                     @Validated(onCreate.class) @RequestBody CommentDTO commentDTO) {
-        commentDTO.setTaskId(taskId);
-        commentDTO.setUserId(CustomSecurityExpression.getCurrentUserId());
 
+        commentDTO.setTaskId(taskId);
         return commentMapper.toDto(
                 commentService.createComment(
                         commentMapper.toEntity(commentDTO))
