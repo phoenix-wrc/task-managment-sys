@@ -50,7 +50,7 @@
 
 3. Запуск с помощью Docker Compose:
 - Откройте терминал в корневой директории проекта.
-- Выполните команду docker-compose up
+- Выполните команду docker compose up
 
 4. Доступ к API:
 - API доступно по адресу http://localhost:8080/api/v1/.
