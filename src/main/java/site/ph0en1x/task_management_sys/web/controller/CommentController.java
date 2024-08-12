@@ -8,8 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import site.ph0en1x.task_management_sys.model.comment.CommentDTO;
 import site.ph0en1x.task_management_sys.model.comment.CommentMapper;
-import site.ph0en1x.task_management_sys.service.CommentService;
-import site.ph0en1x.task_management_sys.web.security.expression.CustomSecurityExpression;
+import site.ph0en1x.task_management_sys.service.impl.CommentService;
 import site.ph0en1x.task_management_sys.web.validation.onCreate;
 
 @Tag(name = "Comment controller", description = "Comments API v1")

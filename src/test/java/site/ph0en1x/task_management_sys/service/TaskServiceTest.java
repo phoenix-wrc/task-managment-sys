@@ -21,6 +21,8 @@ import site.ph0en1x.task_management_sys.model.task.TaskStatus;
 import site.ph0en1x.task_management_sys.repository.CommentRepository;
 import site.ph0en1x.task_management_sys.repository.TaskRepository;
 import site.ph0en1x.task_management_sys.repository.UserRepository;
+import site.ph0en1x.task_management_sys.service.impl.CommentService;
+import site.ph0en1x.task_management_sys.service.impl.TaskServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -55,7 +57,7 @@ class TaskServiceTest {
     private CommentService commentService;
 
     @Autowired
-    private TaskService taskService;
+    private TaskServiceImpl taskService;
 
     @Test
     void updateTask_withValidTask_shouldUpdateAndReturnUpdatedTask() {

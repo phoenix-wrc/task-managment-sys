@@ -10,10 +10,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import site.ph0en1x.task_management_sys.repository.CommentRepository;
 import site.ph0en1x.task_management_sys.repository.TaskRepository;
 import site.ph0en1x.task_management_sys.repository.UserRepository;
-import site.ph0en1x.task_management_sys.service.AuthService;
-import site.ph0en1x.task_management_sys.service.CommentService;
-import site.ph0en1x.task_management_sys.service.TaskService;
-import site.ph0en1x.task_management_sys.service.UserService;
+import site.ph0en1x.task_management_sys.service.impl.AuthService;
+import site.ph0en1x.task_management_sys.service.impl.CommentService;
+import site.ph0en1x.task_management_sys.service.impl.TaskServiceImpl;
+import site.ph0en1x.task_management_sys.service.impl.UserServiceImpl;
 import site.ph0en1x.task_management_sys.web.security.JwtTokenProvider;
 import site.ph0en1x.task_management_sys.web.security.JwtUserDetailsService;
 import site.ph0en1x.task_management_sys.web.security.props.JwtProperties;
@@ -53,8 +53,8 @@ public class TestConfig {
 
     @Bean
     @Primary
-    public UserService userService() {
-        return new UserService(userRepository, testPasswordEncoder());
+    public UserServiceImpl userService() {
+        return new UserServiceImpl(userRepository, testPasswordEncoder());
     }
 
     @Bean
@@ -65,8 +65,8 @@ public class TestConfig {
 
     @Bean
     @Primary
-    public TaskService taskService() {
-        return new TaskService(taskRepository);
+    public TaskServiceImpl taskService() {
+        return new TaskServiceImpl(taskRepository);
     }
 
     @Bean

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +18,9 @@ import site.ph0en1x.task_management_sys.model.user.User;
 import site.ph0en1x.task_management_sys.repository.CommentRepository;
 import site.ph0en1x.task_management_sys.repository.TaskRepository;
 import site.ph0en1x.task_management_sys.repository.UserRepository;
+import site.ph0en1x.task_management_sys.service.impl.AuthService;
+import site.ph0en1x.task_management_sys.service.impl.CommentService;
+import site.ph0en1x.task_management_sys.service.impl.UserServiceImpl;
 import site.ph0en1x.task_management_sys.web.security.JwtTokenProvider;
 
 import java.util.Set;
@@ -46,7 +48,7 @@ class AuthServiceTest {
     private UserRepository userRepository;
 
     @MockBean
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @MockBean
     private JwtTokenProvider tokenProvider;

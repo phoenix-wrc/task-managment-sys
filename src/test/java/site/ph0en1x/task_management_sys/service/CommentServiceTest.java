@@ -20,6 +20,8 @@ import site.ph0en1x.task_management_sys.model.comment.Comment;
 import site.ph0en1x.task_management_sys.repository.CommentRepository;
 import site.ph0en1x.task_management_sys.repository.TaskRepository;
 import site.ph0en1x.task_management_sys.repository.UserRepository;
+import site.ph0en1x.task_management_sys.service.impl.CommentService;
+import site.ph0en1x.task_management_sys.service.impl.TaskServiceImpl;
 import site.ph0en1x.task_management_sys.web.security.expression.CustomSecurityExpression;
 
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ class CommentServiceTest {
     private CommentRepository commentRepository;
 
     @MockBean
-    private TaskService taskService;
+    private TaskServiceImpl taskService;
 
     @MockBean
     private CustomSecurityExpression customSecurityExpression;

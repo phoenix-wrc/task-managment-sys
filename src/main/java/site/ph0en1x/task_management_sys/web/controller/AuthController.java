@@ -15,8 +15,8 @@ import site.ph0en1x.task_management_sys.model.auth.JwtResponse;
 import site.ph0en1x.task_management_sys.model.user.User;
 import site.ph0en1x.task_management_sys.model.user.UserDto;
 import site.ph0en1x.task_management_sys.model.user.UserMapper;
-import site.ph0en1x.task_management_sys.service.AuthService;
-import site.ph0en1x.task_management_sys.service.UserService;
+import site.ph0en1x.task_management_sys.service.impl.AuthService;
+import site.ph0en1x.task_management_sys.service.impl.UserServiceImpl;
 import site.ph0en1x.task_management_sys.web.validation.onCreate;
 
 @Tag(name = "Auth controller", description = "Auth API v1")
@@ -27,7 +27,7 @@ import site.ph0en1x.task_management_sys.web.validation.onCreate;
 public class AuthController {
 
     private final AuthService authService;
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     private final UserMapper userMapper;
 

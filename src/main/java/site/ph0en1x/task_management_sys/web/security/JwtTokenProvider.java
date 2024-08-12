@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import site.ph0en1x.task_management_sys.model.exception.AccessDeniedException;
 import site.ph0en1x.task_management_sys.model.user.Roles;
 import site.ph0en1x.task_management_sys.model.user.User;
-import site.ph0en1x.task_management_sys.service.UserService;
+import site.ph0en1x.task_management_sys.service.impl.UserServiceImpl;
 import site.ph0en1x.task_management_sys.model.auth.JwtResponse;
 import site.ph0en1x.task_management_sys.web.security.props.JwtProperties;
 
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
     private final JwtProperties jwtProperties;
     private final UserDetailsService userDetailsService;
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private Key key;
 
     @PostConstruct

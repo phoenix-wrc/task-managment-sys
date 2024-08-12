@@ -12,7 +12,7 @@ import site.ph0en1x.task_management_sys.model.task.Task;
 import site.ph0en1x.task_management_sys.model.task.TaskDto;
 import site.ph0en1x.task_management_sys.model.task.TaskMapper;
 import site.ph0en1x.task_management_sys.model.task.TaskStatus;
-import site.ph0en1x.task_management_sys.service.TaskService;
+import site.ph0en1x.task_management_sys.service.impl.TaskServiceImpl;
 import site.ph0en1x.task_management_sys.web.validation.onCreate;
 
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ import site.ph0en1x.task_management_sys.web.validation.onCreate;
 @Validated
 @Slf4j
 public class TaskController {
-    private final TaskService taskService;
+    private final TaskServiceImpl taskService;
     private final TaskMapper taskMapper;
 
     @PostMapping

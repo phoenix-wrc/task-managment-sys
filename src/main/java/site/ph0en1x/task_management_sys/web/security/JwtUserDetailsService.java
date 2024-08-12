@@ -5,12 +5,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import site.ph0en1x.task_management_sys.model.user.User;
-import site.ph0en1x.task_management_sys.service.UserService;
+import site.ph0en1x.task_management_sys.service.impl.UserServiceImpl;
 
 @Service
 @RequiredArgsConstructor
 public class JwtUserDetailsService implements UserDetailsService {
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

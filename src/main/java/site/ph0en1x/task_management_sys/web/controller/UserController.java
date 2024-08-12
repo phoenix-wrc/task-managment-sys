@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import site.ph0en1x.task_management_sys.model.user.*;
 import site.ph0en1x.task_management_sys.model.user.UserMapper;
-import site.ph0en1x.task_management_sys.service.UserService;
+import site.ph0en1x.task_management_sys.service.impl.UserServiceImpl;
 import site.ph0en1x.task_management_sys.web.validation.onUpdate;
 
 
@@ -20,7 +20,7 @@ import site.ph0en1x.task_management_sys.web.validation.onUpdate;
 @Validated
 public class UserController {
 
-    private final UserService service;
+    private final UserServiceImpl service;
 
     private final UserMapper mapper;
 

@@ -7,7 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import site.ph0en1x.task_management_sys.model.user.Roles;
-import site.ph0en1x.task_management_sys.service.UserService;
+import site.ph0en1x.task_management_sys.service.impl.UserServiceImpl;
 import site.ph0en1x.task_management_sys.web.security.JwtEntity;
 
 @Service("customSecurityExpression")
@@ -15,7 +15,7 @@ import site.ph0en1x.task_management_sys.web.security.JwtEntity;
 @Slf4j
 public class CustomSecurityExpression {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     public static Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

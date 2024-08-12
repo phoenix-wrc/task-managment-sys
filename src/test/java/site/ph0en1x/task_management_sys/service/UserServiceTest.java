@@ -17,6 +17,9 @@ import site.ph0en1x.task_management_sys.model.user.User;
 import site.ph0en1x.task_management_sys.repository.CommentRepository;
 import site.ph0en1x.task_management_sys.repository.TaskRepository;
 import site.ph0en1x.task_management_sys.repository.UserRepository;
+import site.ph0en1x.task_management_sys.service.impl.CommentService;
+import site.ph0en1x.task_management_sys.service.impl.TaskServiceImpl;
+import site.ph0en1x.task_management_sys.service.impl.UserServiceImpl;
 
 import java.util.Optional;
 import java.util.Set;
@@ -40,7 +43,7 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @MockBean
-    private TaskService taskService;
+    private TaskServiceImpl taskService;
 
     @MockBean
     private CommentRepository commentRepository;
@@ -52,7 +55,7 @@ class UserServiceTest {
     private BCryptPasswordEncoder passEncoder;
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
 
     @Test
